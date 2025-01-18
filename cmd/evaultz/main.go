@@ -1,4 +1,4 @@
-package evaultz
+package main
 
 import "fmt"
 
