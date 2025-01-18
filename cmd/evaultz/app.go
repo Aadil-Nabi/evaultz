@@ -1,0 +1,7 @@
+package evaultz
+
+import "fmt"
+
+func main() {
+	fmt.Println("main function")
+}
