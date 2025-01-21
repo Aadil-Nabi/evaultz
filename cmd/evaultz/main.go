@@ -1,30 +1,25 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
-
+	"github.com/Aadil-Nabi/evaultz/configs"
+	"github.com/Aadil-Nabi/evaultz/controllers"
 	"github.com/gin-gonic/gin"
 )
 
+// this is special function that runs before main and loads the encironment variables and configurations
+func init() {
+	configs.MustLoadEnvs()
+	configs.ConnectDB()
+}
+
 func main() {
-	fmt.Println("main function")
 
 	// Create Gin Router.
 	router := gin.Default()
 
 	// Register Routes
-	router.GET("/", homePage)
-	router.GET("/user/:name", getUserName)
-	// Start a Server.
-	router.Run("localhost:9000")
-}
+	router.GET("/", controllers.PostCreateHandler)
+	router.POST("/registeruser", controllers.RegisterUserHandler)
 
-func homePage(c *gin.Context) {
-	c.String(http.StatusOK, "This is my HomePage")
-}
-
-func getUserName(c *gin.Context) {
-	name := c.Param("name")
-	c.String(http.StatusOK, "Hello %s ", name)
+	router.Run()
 }

@@ -1,8 +1,16 @@
 package configs
 
-import "fmt"
+import (
+	"log"
 
-func Configurations() {
+	"github.com/joho/godotenv"
+)
 
-	fmt.Println("hello from configs")
+func MustLoadEnvs() {
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("unable to load .env file", err)
+	}
+
 }
