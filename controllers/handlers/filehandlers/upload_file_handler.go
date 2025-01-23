@@ -20,6 +20,13 @@ var err error
 var client *s3.Client
 var BucketName = "bucket.aadilnabi"
 
+type FileDetails struct {
+	Key      string
+	Location string
+}
+
+var fileDetails FileDetails
+
 func UploadFile(c *gin.Context) {
 
 	// STEP 1
@@ -78,6 +85,12 @@ func UploadFile(c *gin.Context) {
 		Location: Location,
 	}
 
+	// Store the Key(file name) and URL(Location) of a file in a struct accessible outside from this package
+	fileDetails := FileDetails{
+		Key:      Key,
+		Location: Location,
+	}
+
 	fileOnDB := configs.DB.Create(&filePayload)
 	if fileOnDB.Error != nil {
 		c.Status(400)
@@ -88,6 +101,6 @@ func UploadFile(c *gin.Context) {
 
 	// Render the json
 	c.JSON(http.StatusOK, gin.H{
-		"result": filePayload,
+		"result": fileDetails,
 	})
 }

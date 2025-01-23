@@ -17,15 +17,15 @@ func main() {
 
 	// Create Gin Router.
 	router := gin.Default()
-	// router.MaxMultipartMemory = 8 << 20 // 8 MiB
 
-	// router.GET("/", controllers.ListFiles)
+	// Routers for user operations.
 	router.POST("/register", userhandlers.RegisterUserHandler)
 
+	// Routers for file operations
+	router.GET("/", filehandlers.ListFiles)
 	router.POST("/upload", filehandlers.UploadFile)
 	// router.GET("/download", controllers.DownloadFile)
-
-	// router.DELETE("/delete", controllers.DeleteFile)
+	router.DELETE("/delete", filehandlers.DeleteFile)
 
 	router.Run()
 }

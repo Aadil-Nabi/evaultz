@@ -15,6 +15,7 @@ import (
 
 // Download a file which is Read in CRUD for other REST API
 func DownloadFile(c *gin.Context) {
+
 	file, err := os.Create("pass_filename_here")
 	if err != nil {
 		log.Fatal("unable to create a file, ")

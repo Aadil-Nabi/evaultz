@@ -5,13 +5,27 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Aadil-Nabi/evaultz/models"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/gin-gonic/gin"
 )
 
+type deleteBody struct {
+	Key      string
+	Location string
+}
+
 func DeleteFile(c *gin.Context) {
+
+	var deleteBody deleteBody
+
+	c.Bind(&deleteBody)
+
+	deleteBodyPayload := models.Files{
+		Key: deleteBody.Key,
+	}
 	// STEP 1
 	// Setup S3 Uploader. Load the Shared AWS Configuration (~/.aws/config)
 	cfg, err = config.LoadDefaultConfig(context.TODO())
@@ -25,7 +39,7 @@ func DeleteFile(c *gin.Context) {
 	client = s3.NewFromConfig(cfg)
 	_, err := client.DeleteObject(context.TODO(), &s3.DeleteObjectInput{
 		Bucket: aws.String(BucketName),
-		Key:    aws.String("key"),
+		Key:    aws.String(deleteBodyPayload.Key),
 	})
 
 	if err != nil {
