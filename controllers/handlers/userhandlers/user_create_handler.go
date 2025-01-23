@@ -1,4 +1,4 @@
-package controllers
+package userhandlers
 
 import (
 	"net/http"

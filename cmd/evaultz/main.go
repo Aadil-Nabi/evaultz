@@ -2,7 +2,8 @@ package main
 
 import (
 	"github.com/Aadil-Nabi/evaultz/configs"
-	"github.com/Aadil-Nabi/evaultz/controllers"
+	"github.com/Aadil-Nabi/evaultz/controllers/handlers/filehandlers"
+	"github.com/Aadil-Nabi/evaultz/controllers/handlers/userhandlers"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,10 +17,15 @@ func main() {
 
 	// Create Gin Router.
 	router := gin.Default()
+	// router.MaxMultipartMemory = 8 << 20 // 8 MiB
 
-	// Register Routes
-	router.GET("/", controllers.PostCreateHandler)
-	router.POST("/registeruser", controllers.RegisterUserHandler)
+	// router.GET("/", controllers.ListFiles)
+	router.POST("/register", userhandlers.RegisterUserHandler)
+
+	router.POST("/upload", filehandlers.UploadFile)
+	// router.GET("/download", controllers.DownloadFile)
+
+	// router.DELETE("/delete", controllers.DeleteFile)
 
 	router.Run()
 }
