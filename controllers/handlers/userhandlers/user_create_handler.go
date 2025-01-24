@@ -9,7 +9,7 @@ import (
 )
 
 // user struct to store the values received from the request body
-type userBody struct {
+type userDetails struct {
 	FirstName string
 	LastName  string
 	Email     string
@@ -17,23 +17,32 @@ type userBody struct {
 }
 
 func RegisterUserHandler(c *gin.Context) {
-	var user userBody
+	var userbody userDetails
 	//  Bind decodes the json payload received on the request body into the struct specified as a pointer
-	c.Bind(&user)
+	c.Bind(&userbody)
 
-	userPayload := models.User{
-		FirstName: user.FirstName,
-		LastName:  user.LastName,
-		Email:     user.Email,
-		Password:  user.Password,
+	user := models.User{
+		FirstName: userbody.FirstName,
+		LastName:  userbody.LastName,
+		Email:     userbody.Email,
+		Password:  userbody.Password,
 	}
 
-	usr := configs.DB.Create(&userPayload)
-	if usr.Error != nil {
-		c.Status(400)
-		return
+	result := configs.DB.Where("email = ?", user.Email).Find(&user)
+	if result.RowsAffected > 0 {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "email already exists",
+		})
+	} else {
+		usr := configs.DB.Create(&user)
+		if usr.Error != nil {
+			c.Status(400)
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"result": user,
+		})
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"result": userPayload,
-	})
+
 }
