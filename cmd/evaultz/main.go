@@ -1,8 +1,9 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/Aadil-Nabi/evaultz/configs"
-	"github.com/Aadil-Nabi/evaultz/controllers/handlers/filehandlers"
 	"github.com/Aadil-Nabi/evaultz/controllers/handlers/userhandlers"
 	"github.com/gin-gonic/gin"
 )
@@ -15,17 +16,22 @@ func init() {
 
 func main() {
 
+	fmt.Println("Hello from the main")
+
 	// Create Gin Router.
 	router := gin.Default()
 
+	router.Use(gin.Logger())
+
 	// Routers for user operations.
-	router.POST("/register", userhandlers.RegisterUserHandler)
+	router.POST("/signup", userhandlers.SignUpHandler)
+	router.POST("/login", userhandlers.Login)
 
 	// Routers for file operations
-	router.GET("/", filehandlers.ListFiles)
-	router.POST("/upload", filehandlers.UploadFile)
-	// router.GET("/download", controllers.DownloadFile)
-	router.DELETE("/delete", filehandlers.DeleteFile)
+	// router.GET("/", filehandlers.ListFiles)
+	// router.POST("/upload", filehandlers.UploadFile)
+	// // router.GET("/download", controllers.DownloadFile)
+	// router.DELETE("/delete", filehandlers.DeleteFile)
 
 	router.Run()
 }
