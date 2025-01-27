@@ -36,6 +36,9 @@ func RequireAuth(c *gin.Context) {
 	if claims, ok := token.Claims.(jwt.MapClaims); ok {
 		// Check the expiry
 		if float64(time.Now().Unix()) > claims["expiry"].(float64) {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"message": "Try to Login or Register",
+			})
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
 
@@ -47,7 +50,7 @@ func RequireAuth(c *gin.Context) {
 
 		}
 
-		// Attach to request
+		// Attach to requestx``
 		c.Set("user", user)
 
 		// Continue to next

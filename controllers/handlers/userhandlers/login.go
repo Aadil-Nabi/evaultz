@@ -52,7 +52,9 @@ func Login(c *gin.Context) {
 	// you would like it to contain.
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub":    user.ID,
-		"expiry": time.Now().Add(time.Hour * 24).Unix(),
+		"expiry": time.Now().Add(time.Second * 60).Unix(),
+		// "expiry": time.Now().Add(time.Hour * 24).Unix(),
+
 	})
 
 	// Sign and get the complete encoded token as a string using the secret
@@ -65,7 +67,8 @@ func Login(c *gin.Context) {
 
 	// Store this jwt token in a cookie instead of sending it on JSON payload
 	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("Authorization", tokenString, 3600*24, "", "", true, true)
+	// c.SetCookie("Authorization", tokenString, 3600*24, "", "", true, true)
+	c.SetCookie("Authorization", tokenString, 60, "", "", true, true)
 
 	// Send a response.
 	c.JSON(http.StatusOK, gin.H{

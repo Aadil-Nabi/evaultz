@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/Aadil-Nabi/evaultz/configs"
+	"github.com/Aadil-Nabi/evaultz/controllers/handlers/filehandlers"
 	"github.com/Aadil-Nabi/evaultz/controllers/handlers/posthandlers"
 	"github.com/Aadil-Nabi/evaultz/controllers/handlers/userhandlers"
 	"github.com/Aadil-Nabi/evaultz/middleware"
@@ -30,10 +31,10 @@ func main() {
 	router.POST("/login", userhandlers.Login)
 
 	// Routers for file operations
-	// router.GET("/", filehandlers.ListFiles)
-	// router.POST("/upload", filehandlers.UploadFile)
-	// // router.GET("/download", controllers.DownloadFile)
-	// router.DELETE("/delete", filehandlers.DeleteFile)
+	router.GET("/", middleware.RequireAuth, filehandlers.ListFiles)
+	router.POST("/upload", middleware.RequireAuth, filehandlers.UploadFile)
+	// router.GET("/download", controllers.DownloadFile)
+	router.DELETE("/delete", middleware.RequireAuth, filehandlers.DeleteFile)
 
 	// Routers for Posts
 	router.GET("/posts", middleware.RequireAuth, posthandlers.ListPosts)
