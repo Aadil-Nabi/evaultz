@@ -15,6 +15,7 @@ type userDetails struct {
 	LastName  string
 	Email     string
 	Password  string
+	Phone     string
 }
 
 func SignUpHandler(c *gin.Context) {
@@ -26,7 +27,6 @@ func SignUpHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "failed to read body",
 		})
-
 		return
 	}
 
@@ -44,6 +44,7 @@ func SignUpHandler(c *gin.Context) {
 		LastName:  userbody.LastName,
 		Email:     userbody.Email,
 		Password:  string(hash),
+		Phone:     userbody.Phone,
 	}
 
 	// Create the user

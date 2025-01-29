@@ -14,12 +14,14 @@ func DeleteUser(c *gin.Context) {
 	id := c.Param("id")
 
 	var user models.User
-	result := configs.DB.Delete(&user, "id=?", id)
-	if result.Error != nil {
-		c.JSON(400, gin.H{
-			"message": "unable to delete user",
-		})
-	}
+	// result := configs.DB.Delete(&user, "id=?", id)
+	// if result.Error != nil {
+	// 	c.JSON(400, gin.H{
+	// 		"message": "unable to delete user",
+	// 	})
+	// }
+
+	configs.DB.Where("id=?", id).Delete(&user)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "user " + user.Email + "deleted successfully",
