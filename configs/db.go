@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// Create a global variable so that we can access these variables anywhere outside of this package
+// DB is a global variable so that we can access these variables anywhere outside of this package
 var DB *gorm.DB
 var err error
 

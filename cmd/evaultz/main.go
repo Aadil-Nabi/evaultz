@@ -29,6 +29,8 @@ func main() {
 	// Routers for user operations.
 	router.POST("/signup", userhandlers.SignUpHandler)
 	router.POST("/login", userhandlers.Login)
+	router.PATCH("/update/:id", userhandlers.UpdateUser)
+	router.DELETE("/delete/:id", userhandlers.DeleteUser)
 
 	// Routers for file operations
 	router.GET("/", middleware.RequireAuth, filehandlers.ListFiles)
