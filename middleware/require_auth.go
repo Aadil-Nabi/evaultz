@@ -13,14 +13,13 @@ import (
 )
 
 func RequireAuth(c *gin.Context) {
-	fmt.Println("In the middleware")
 	// Get the cookie off the request
 	tokenString, err := c.Cookie("Authorization")
 	if err != nil {
 		c.AbortWithStatus(http.StatusUnauthorized)
 	}
 
-	// Dceode/validate it
+	// Decode/validate it
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -50,7 +49,7 @@ func RequireAuth(c *gin.Context) {
 
 		}
 
-		// Attach to requestx``
+		// Attach to request``
 		c.Set("user", user)
 
 		// Continue to next
