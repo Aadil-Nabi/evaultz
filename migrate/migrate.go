@@ -16,7 +16,8 @@ func init() {
 func main() {
 
 	// Call Automigrate on DB instaance received from the configs package
-	// configs.DB.AutoMigrate(models.Post{})
+	configs.DB.AutoMigrate(models.Post{})
 	configs.DB.AutoMigrate(models.User{})
-	// configs.DB.AutoMigrate(models.Files{})
+	configs.DB.AutoMigrate(models.Files{})
+	configs.DB.AutoMigrate(models.Card{})
 }

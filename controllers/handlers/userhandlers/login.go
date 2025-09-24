@@ -28,7 +28,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// Lookup the requested user in the DB ans store in a variable
+	// Lookup the requested user in the DB and store in a variable
 	var user models.User
 
 	configs.DB.First(&user, "email=?", userLoginDetails.Email)

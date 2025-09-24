@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/Aadil-Nabi/evaultz/configs"
 	"github.com/Aadil-Nabi/evaultz/controllers/handlers/filehandlers"
+	"github.com/Aadil-Nabi/evaultz/controllers/handlers/paymenthandlers"
 	"github.com/Aadil-Nabi/evaultz/controllers/handlers/posthandlers"
 	"github.com/Aadil-Nabi/evaultz/controllers/handlers/userhandlers"
 	"github.com/Aadil-Nabi/evaultz/middleware"
@@ -18,8 +17,6 @@ func init() {
 }
 
 func main() {
-
-	fmt.Println("Hello from the main")
 
 	// Create Gin Router.
 	router := gin.Default()
@@ -40,6 +37,9 @@ func main() {
 
 	// Routers for Posts
 	router.GET("/posts", middleware.RequireAuth, posthandlers.ListPosts)
+
+	// Routes for Payments
+	router.POST("/addpayment", middleware.RequireAuth, paymenthandlers.PaymentHandler)
 
 	router.Run()
 }

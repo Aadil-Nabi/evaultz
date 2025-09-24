@@ -11,12 +11,12 @@ import (
 func DeleteUser(c *gin.Context) {
 
 	// Get the ID of the user to be deleted
-	// id := c.Param("id")
+	id := c.Param("id")
 
 	var user models.User
 
 	// configs.DB.Where("id=?", id).Delete(&user)
-	configs.DB.Delete(&user, 20)
+	configs.DB.Delete(&user, id)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "user " + user.Email + "deleted successfully",

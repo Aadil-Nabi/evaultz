@@ -4,11 +4,11 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	FirstName string
-	LastName  string
-	Email     string `gorm:"unique"`
-	Password  string
-	Phone     string
+	FirstName string `validate:"required"`
+	LastName  string `validate:"required"`
+	Email     string `validate:"required,email"`
+	Password  string `validate:"required"`
+	Phone     string `validate:"required"`
 }
 
 // gorm.Model

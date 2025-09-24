@@ -39,6 +39,7 @@ func SignUpHandler(c *gin.Context) {
 		return
 	}
 
+	// initialize and assign the values received from the Jason Payload from user, to the User struct
 	user := models.User{
 		FirstName: userbody.FirstName,
 		LastName:  userbody.LastName,

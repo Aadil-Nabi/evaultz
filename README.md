@@ -14,32 +14,29 @@ Make sure you have latest GoLang installed on your workstation, and you can down
 
 ### `Usage` ▶
 
-- Create a config.yaml file, example as below. Make sure you don't store this config file in a public repository or network share for security reasons
-  You can store the passwords in an external secret management vault like AKeyless Vault or Hashicorp Vault
+- Create a env file, example as below. Make sure you don't store this config file in a public repository or network share for security reasons
+  You can store the passwords or secrets in an external secret management vault like AKeyless Vault or Hashicorp Vault
 
 ```bash
-env: "dev"
-cm_secret:
-  base_url: "https://yourciphertrustip.com/api/"
-  version: "v1"
-  cm_user: "Your CipherTrust Manager Username"
-  cm_password: "Your CipherTrust Manager User Password"
-  encryption_key: "Your CM Encryption Key"
-akeyless_secret:
-  username: "Your Akeyless console email (https://console.akeyless.io/)"
-  password: "Your Akeyless console password"
+ENV=dev
+PORT=8082
+DB_URL="host=192.168.238.147 user=postgres password=Asdf@1234 dbname=evaultz port=5432 sslmode=disable"
+AWS_REGION=ap-south-1
+AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXXX
+AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXX+XXXXXXXXXXXXXXXX/w
+TOKEN_SECRET=XXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 To run the program you need to execute the run command in the below format
 
 ```bash
-go run cmd/evaultz/main.go -configfile config.yaml
+go run cmd/evaultz/main.go
 ```
 
 Build the program into an executable file for your specific platform, Example below for Mac/Linux
 
 ```bash
-go build -o evaultz cmd/evaultz/main.go -configfile config.yaml
+go build -o evaultz cmd/evaultz/main.go
 ```
 
 ### `Contributing` 🤝
