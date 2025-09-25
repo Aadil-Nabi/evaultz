@@ -8,6 +8,14 @@ THIS PROJECT IS STILL IN THE INITIAL PHASE, STAY TUNED
 
 This is an file storage app, we can store any file like docs, videos, pdf etc.
 
+### `Tools and Apps needed`
+
+- Thales CiphertrustManager
+- AWS S3
+- Postgres
+- Thales CRDP
+- Docker
+
 ### `Installation` ✔
 
 - Make sure you have 1.25.1 GoLang installed on your workstation, and you can download the code and use it directly on any IDE
@@ -16,6 +24,7 @@ This is an file storage app, we can store any file like docs, videos, pdf etc.
 - Thales CRDP image is downloaded ( we will use docker-compose to run all the containers)
 - Application is created inside the CM ( follow Thales CRDP document to install the CRDP)
 - AWS S3 account is created and should have active keys
+- Update docker-compose.yaml file with your CM IP and registration token created inside the CM.
 
 ### `Usage` ▶
 
