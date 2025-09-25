@@ -41,5 +41,5 @@ func main() {
 	// Routes for Payments
 	router.POST("/addpayment", middleware.RequireAuth, paymenthandlers.PaymentHandler)
 
-	router.Run()
+	router.Run(":8082")
 }
