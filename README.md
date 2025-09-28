@@ -63,6 +63,12 @@ Go to the root directory of the evaultz project e.g. C:\Users\aadilnabi\Download
 docker-compose up --build
 ```
 
+### `Troubleshoot`
+
+- Make sure your all docker container are up and running
+- Make sure CipherTrusts Manager is up and running and application is created for CRDP
+- Check if all the ports are correctly configured for CM and CRDP
+
 ### `Contributing` 🤝
 
 Contributions, issues and feature requests are welcome, but it is paused for now.

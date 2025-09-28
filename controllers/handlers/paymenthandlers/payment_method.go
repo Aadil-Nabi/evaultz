@@ -45,8 +45,6 @@ func PaymentHandler(c *gin.Context) {
 	encryptedData := encrypting()
 	encryptedCreditCard := encryptedData["protected_data"]
 
-	////////////////////
-
 	cardDetailModel := models.Card{
 		Name:       cardDetailsBody.Name,
 		CardNumber: encryptedCreditCard,
