@@ -8,27 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// type UserDetail struct {
-// 	FirstName string
-// 	LastName  string
-// 	Username  string
-// 	Email     string
-// 	Password  string
-// 	Phone     string
-// 	DOB       string
-// }
-
-// var userDetail UserDetail
-
 func GetUserDetails(c *gin.Context) {
-
-	// // Bind the input payload to a struct and store the incoming values inside the struct created above.
-	// err := c.Bind(&userDetail)
-	// if err != nil {
-	// 	c.JSON(http.StatusBadRequest, gin.H{
-	// 		"error": err,
-	// 	})
-	// }
 
 	var user models.User
 
@@ -53,8 +33,7 @@ func GetUserDetails(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"user":  user,
-		"cards": user.Cards,
+		"user": user,
 	})
 	// for _, card := range user.Cards {
 	// 	c.JSON(http.StatusOK, gin.H{
