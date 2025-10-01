@@ -1,7 +1,7 @@
 services:
   ciphertrust:
     image: thalesciphertrust/ciphertrust-restful-data-protection:1.2.1
-    container_name: ciphertrust
+    container_name: crdp
     restart: always
     ports:
       - "8080:8080"

@@ -6,6 +6,7 @@ import (
 	"github.com/Aadil-Nabi/evaultz/controllers/handlers/paymenthandlers"
 	"github.com/Aadil-Nabi/evaultz/controllers/handlers/posthandlers"
 	"github.com/Aadil-Nabi/evaultz/controllers/handlers/userhandlers"
+
 	"github.com/Aadil-Nabi/evaultz/middleware"
 	"github.com/gin-gonic/gin"
 )
