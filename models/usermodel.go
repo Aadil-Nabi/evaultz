@@ -6,9 +6,12 @@ type User struct {
 	gorm.Model
 	FirstName string `validate:"required"`
 	LastName  string `validate:"required"`
+	Username  string `gorm:"unique; validate:required"`
 	Email     string `validate:"required,email"`
 	Password  string `validate:"required"`
 	Phone     string `validate:"required"`
+	DOB       string `validate:"required"`
+	Cards     []Card `gorm:"foreignKey:UserID"`
 }
 
 // gorm.Model

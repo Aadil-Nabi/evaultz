@@ -6,8 +6,10 @@ import (
 
 type Card struct {
 	gorm.Model
-	Name       string
+	NameOnCard string
 	CardNumber string
 	Cvv        string
 	Expiry     string
+	UserID     uint  // foreign key column
+	User       *User `gorm:"foreignKey:UserID"`
 }

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/Aadil-Nabi/evaultz/configs"
 	"github.com/Aadil-Nabi/evaultz/models"
 )
@@ -20,4 +22,6 @@ func main() {
 	configs.DB.AutoMigrate(models.User{})
 	configs.DB.AutoMigrate(models.Files{})
 	configs.DB.AutoMigrate(models.Card{})
+
+	log.Println("Successfully created tables inside the database")
 }

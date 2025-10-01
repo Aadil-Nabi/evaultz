@@ -14,6 +14,7 @@ import (
 
 type userLoginDetails struct {
 	Email    string
+	Username string
 	Password string
 }
 
@@ -23,7 +24,7 @@ func Login(c *gin.Context) {
 	// Get the user details from the request.
 	if c.Bind(&userLoginDetails) != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "unable to get the email and password for the user",
+			"error": "unable to bind user details",
 		})
 		return
 	}
@@ -31,10 +32,10 @@ func Login(c *gin.Context) {
 	// Lookup the requested user in the DB and store in a variable
 	var user models.User
 
-	configs.DB.First(&user, "email=?", userLoginDetails.Email)
-	if user.ID == 0 {
+	configs.DB.Where("email = ? AND username = ?", userLoginDetails.Email, userLoginDetails.Username).Find(&user)
+	if userLoginDetails.Username != user.Username {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid email or password",
+			"error": "invalid username, doesn't match with provided email and password",
 		})
 		return
 	}
@@ -43,8 +44,9 @@ func Login(c *gin.Context) {
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(userLoginDetails.Password))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed Login, Invalid email and password",
+			"error": "Failed Login, Invalid email or password",
 		})
+		return
 	}
 
 	// Generate JWT token

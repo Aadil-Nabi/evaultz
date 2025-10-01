@@ -1,29 +1,4 @@
-version: "3.9"
-
 services:
-  db:
-    image: postgres:15
-    container_name: evaultz-postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Asdf@1234
-      POSTGRES_DB: evaultz
-    ports:
-      - "5432:5432"
-    volumes:
-      - db_data:/var/lib/postgresql/data
-
-  app:
-    build: .
-    container_name: evaultz
-    depends_on:
-      - db
-      - ciphertrust
-    env_file:
-      - .env
-    ports:
-      - "8082:8082"
-
   ciphertrust:
     image: thalesciphertrust/ciphertrust-restful-data-protection:1.2.1
     container_name: ciphertrust
@@ -37,6 +12,3 @@ services:
       KEY_MANAGER_HOST: 192.168.238.141
       REGISTRATION_TOKEN: yljrDRFMJDpFldkGdlkPe6b9Dwt6BKGPoEzWylg8TudMS10ksue8jPcNmTZwY670
       SERVER_MODE: no-tls
-
-volumes:
-  db_data:

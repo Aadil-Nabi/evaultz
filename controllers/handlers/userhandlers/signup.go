@@ -13,9 +13,11 @@ import (
 type userDetails struct {
 	FirstName string
 	LastName  string
+	Username  string
 	Email     string
 	Password  string
 	Phone     string
+	DOB       string
 }
 
 func SignUpHandler(c *gin.Context) {
@@ -43,9 +45,11 @@ func SignUpHandler(c *gin.Context) {
 	user := models.User{
 		FirstName: userbody.FirstName,
 		LastName:  userbody.LastName,
+		Username:  userbody.Username,
 		Email:     userbody.Email,
 		Password:  string(hash),
 		Phone:     userbody.Phone,
+		DOB:       userbody.DOB,
 	}
 
 	// Create the user

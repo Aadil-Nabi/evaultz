@@ -15,12 +15,10 @@ import (
 )
 
 type cardDetails struct {
-	Name                   string
-	CardNumber             string
-	Cvv                    string
-	Expiry                 string
-	Protection_policy_name string
-	Data                   string
+	Name       string
+	CardNumber string
+	Cvv        string
+	Expiry     string
 }
 
 type ProtectPolicy struct {
@@ -45,11 +43,25 @@ func PaymentHandler(c *gin.Context) {
 	encryptedData := encrypting()
 	encryptedCreditCard := encryptedData["protected_data"]
 
+	// get the user from the gin context which was set in the middleware.
+	usr, exists := c.Get("user")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "user not found"})
+		return
+	}
+
+	user, ok := usr.(models.User)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "invalid user in context"})
+		return
+	}
+
 	cardDetailModel := models.Card{
-		Name:       cardDetailsBody.Name,
+		NameOnCard: cardDetailsBody.Name,
 		CardNumber: encryptedCreditCard,
 		Cvv:        cardDetailsBody.Cvv,
 		Expiry:     cardDetailsBody.Expiry,
+		UserID:     user.ID,
 	}
 
 	cardDetail := configs.DB.Create(&cardDetailModel)

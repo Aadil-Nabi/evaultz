@@ -29,6 +29,9 @@ func main() {
 	router.PATCH("/update/:id", userhandlers.UpdateUser)
 	router.DELETE("/delete/:id", userhandlers.DeleteUser)
 
+	// Routes for user Detail.
+	router.GET("/getuserdetails", middleware.RequireAuth, userhandlers.GetUserDetails)
+
 	// Routers for file operations
 	router.GET("/", middleware.RequireAuth, filehandlers.ListFiles)
 	router.POST("/upload", middleware.RequireAuth, filehandlers.UploadFile)

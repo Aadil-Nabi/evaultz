@@ -1,0 +1,12 @@
+services:
+  db:
+    image: postgres:15
+    container_name: evaultz-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Asdf@1234
+      POSTGRES_DB: evaultz
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
