@@ -73,7 +73,8 @@ func PaymentHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"result": cardDetailModel,
+		"message": "Card added successfully",
+		"result":  cardDetailModel,
 	})
 
 }

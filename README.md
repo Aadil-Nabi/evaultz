@@ -41,6 +41,7 @@ DB_URL="host=db user=postgres password=Asdf@1234 dbname=evaultz port=5432 sslmod
 AWS_REGION=ap-south-1
 AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXXX
 AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXX+XXXXXXXXXXXXXXXX/w
+# Token Secret to create a JWT for authentication service.
 TOKEN_SECRET=XXXXXXXXXXXXXXXXXXXXXXXX
 ```
 

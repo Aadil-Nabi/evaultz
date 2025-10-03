@@ -33,12 +33,16 @@ func ListFiles(c *gin.Context) {
 			"error": "Failed to load file from the form",
 		})
 	}
+
 	for _, item := range resp.Contents {
 		log.Printf("- %s (size: %d bytes)\n", aws.ToString(item.Key), item.Size)
-	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"output": resp,
-	})
+		c.JSON(http.StatusOK, gin.H{
+			"filename":     item.Key,
+			"owner":        item.Owner,
+			"size":         item.Size,
+			"lastmodified": item.LastModified,
+		})
+	}
 
 }
