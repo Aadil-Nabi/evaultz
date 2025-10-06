@@ -2,21 +2,31 @@ include:
   - ciphertrust.yaml
   - postgres.yaml
 services:
-  app:
-    build: .
-    container_name: evaultz
+  backend:
+    build: ./backend
+    container_name: evaultz-backend
     depends_on:
       - db
       - ciphertrust
     env_file:
-      - .env
+      - ./backend/.env
     ports:
       - "8082:8082"
-    develop:
-      watch:
-        - action: sync
-          path: .
-          target: /app
+    # develop:
+    #   watch:
+    #     - action: sync
+    #       path: ./backend
+    #       target: /app
+  # frontend:
+  #   build: ./frontend
+  #   container_name: evaultz-frontend
+  #   depends_on:
+  #     - backend
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     # Frontend calls backend using the Docker service name
+  #     NEXT_PUBLIC_API_URL: http://backend:8082
 
 volumes:
   db_data:

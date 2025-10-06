@@ -1,0 +1,41 @@
+# ─── Stage 1: Builder ───
+FROM golang:1.25.1 AS builder
+
+WORKDIR /app
+
+# Optional: bypass TLS issues if behind a corporate proxy
+ENV GOPROXY=direct
+ENV GOSUMDB=off
+ENV GOINSECURE=*
+ENV GIT_SSL_NO_VERIFY=1
+
+# Copy go mod files first (for caching deps)
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy backend source
+COPY . .
+
+# Expose port (for docs only)
+EXPOSE 8082
+
+# Build static binary
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+    go build -trimpath -ldflags="-s -w" -o /app/bin/evaultz ./cmd/evaultz
+
+# ─── Stage 2: Runtime ───
+FROM gcr.io/distroless/base-debian12
+
+WORKDIR /app
+
+# Copy binary from builder
+COPY --from=builder /app/bin/evaultz /app/bin/evaultz
+
+# Copy .env if needed (optional, otherwise mount via docker-compose env_file)
+# COPY .env /app/.env
+
+# Expose backend port
+EXPOSE 8082
+
+# Run binary
+ENTRYPOINT ["/app/bin/evaultz"]
