@@ -1,12 +1,13 @@
 include:
   - ciphertrust.yaml
   - postgres.yaml
+
 services:
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: evaultz-backend
+    container_name: evaultz-backend-dev
     depends_on:
       - db
       - ciphertrust
@@ -14,25 +15,36 @@ services:
       - ./backend/.env
     ports:
       - "8082:8082"
+    volumes:
+      - ./backend:/app
+      - go-mod-cache:/go/pkg/mod # cache modules
+      - go-build-cache:/root/.cache/go-build
     networks:
       - evaultz_net
+    command: air -c .air.toml # hot reload
 
   frontend:
     build:
       context: ./frontend/evaultzweb
-      dockerfile: Dockerfile
-    container_name: evaultz-frontend
+      dockerfile: Dockerfile.dev
+    container_name: evaultz-frontend-dev
     depends_on:
       - backend
     ports:
-      - "3000:3000" # frontend accessible on host:3000
+      - "3000:3000"
     environment:
       NEXT_PUBLIC_API_URL: http://backend:8082
+    volumes:
+      - ./frontend/evaultzweb:/app
+      - /app/node_modules # prevent overwriting node_modules in container
+    command: npm run dev
     networks:
       - evaultz_net
 
 volumes:
   db_data:
+  go-mod-cache:
+  go-build-cache:
 
 networks:
   evaultz_net:

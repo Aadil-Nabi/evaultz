@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:15
+    image: postgres:15 # docker will be pulling this image from docker hub, if not pulled/downloaded.
     container_name: evaultz-postgres
     environment:
       POSTGRES_USER: postgres
@@ -10,3 +10,5 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    networks:
+      - evaultz_net

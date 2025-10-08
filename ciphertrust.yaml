@@ -12,3 +12,5 @@ services:
       KEY_MANAGER_HOST: 192.168.238.141
       REGISTRATION_TOKEN: yljrDRFMJDpFldkGdlkPe6b9Dwt6BKGPoEzWylg8TudMS10ksue8jPcNmTZwY670
       SERVER_MODE: no-tls
+    networks:
+      - evaultz_net
