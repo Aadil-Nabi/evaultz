@@ -18,7 +18,7 @@ func init() {
 // This function will only be used to create a Table for the first time and won't be
 // used anyfurther once the table is created from the struct
 // func main() {
-func migrateTab() {
+func main() {
 
 	// Call Automigrate on DB instaance received from the configs package
 	configs.DB.AutoMigrate(models.Post{})

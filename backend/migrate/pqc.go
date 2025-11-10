@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-func main() {
+func pqc() {
 	// Alice generates a new key pair and sends the encapsulation key to Bob.
 	decapsulationKey, err := mlkem.GenerateKey768()
 	if err != nil {

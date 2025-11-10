@@ -15,13 +15,13 @@ var err error
 
 func ConnectDB() {
 
-	dsn := os.Getenv("DB_URL")
+	dsn := os.Getenv("DATABASE_URL")
 	// dsn := "host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai"
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Failed to open database : ", err)
+		log.Fatalf("Failed to open database : %v ", err)
 	}
 
-	fmt.Println("✔ Successfully Connected to the database", DB.Name())
+	fmt.Println("✔ Successfully Connected to the  Neon Postgres database", DB.Name())
 
 }

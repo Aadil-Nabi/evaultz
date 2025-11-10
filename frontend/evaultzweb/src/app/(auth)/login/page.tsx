@@ -1,7 +1,9 @@
-export default function LoginPage() {
+import Link from "next/link";
+
+export default function LoginUserPage() {
   return (
     <>
-      <html className="h-full bg-gray-50 dark:bg-gray-900">
+      <div className="h-full bg-gray-50 dark:bg-gray-900">
         <div className="h-full">
           <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -27,6 +29,25 @@ export default function LoginPage() {
                         type="email"
                         required
                         autoComplete="email"
+                        className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="username"
+                      className="block text-sm/6 font-medium text-gray-900 dark:text-white"
+                    >
+                      Username
+                    </label>
+                    <div className="mt-2">
+                      <input
+                        id="username"
+                        name="username"
+                        type="text"
+                        required
+                        autoComplete="text"
                         className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
                       />
                     </div>
@@ -114,17 +135,17 @@ export default function LoginPage() {
 
               <p className="mt-10 text-center text-sm/6 text-gray-500 dark:text-gray-400">
                 Not a member?{" "}
-                <a
-                  href="#"
+                <Link
+                  href="/register"
                   className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
                 >
                   Sign Up
-                </a>
+                </Link>
               </p>
             </div>
           </div>
         </div>
-      </html>
+      </div>
     </>
   );
 }

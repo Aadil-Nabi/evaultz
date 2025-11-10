@@ -1,12 +1,9 @@
+# backend/.air.toml
 root = "."
 tmp_dir = "tmp"
 
 [build]
-cmd = "go build -o ./tmp/main ./cmd/evaultz"
-bin = "tmp/main"
-full_bin = "APP_ENV=dev ./tmp/main"
-include_ext = ["go"]
-exclude_dir = ["vendor", "tmp"]
-
-[log]
-time = true
+# build command — keep same path you use in prod (./cmd/evaultz)
+cmd = "go build -o ./tmp/evaultz ./cmd/evaultz"
+bin = "tmp/evaultz"
+full_bin = "tmp/evaultz"

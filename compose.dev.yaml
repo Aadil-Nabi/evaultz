@@ -1,50 +1,57 @@
+# docker-compose.dev.yaml
 include:
   - ciphertrust.yaml
-  - postgres.yaml
 
 services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: evaultz-backend-dev
-    depends_on:
-      - db
-      - ciphertrust
     env_file:
       - ./backend/.env
+    volumes:
+      - ./backend:/app:delegated # mount source for hot reload
+      - backend_tmp:/app/tmp # Air build output
+      - go_cache:/go/pkg/mod # cache Go modules
     ports:
       - "8082:8082"
-    volumes:
-      - ./backend:/app
-      - go-mod-cache:/go/pkg/mod # cache modules
-      - go-build-cache:/root/.cache/go-build
     networks:
       - evaultz_net
-    command: air -c .air.toml # hot reload
+    depends_on:
+      - frontend
+    # optional: simple health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   frontend:
     build:
       context: ./frontend/evaultzweb
       dockerfile: Dockerfile.dev
-    container_name: evaultz-frontend-dev
-    depends_on:
-      - backend
+    container_name: evaultz-frontend
     ports:
       - "3000:3000"
     environment:
+      NODE_ENV: development
       NEXT_PUBLIC_API_URL: http://backend:8082
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+      WATCHPACK_POLLING_INTERVAL: 500
+      NEXT_WEBPACK_USEPOLLING: "true"
     volumes:
       - ./frontend/evaultzweb:/app
-      - /app/node_modules # prevent overwriting node_modules in container
-    command: npm run dev
+      - /app/node_modules
     networks:
       - evaultz_net
 
 volumes:
-  db_data:
-  go-mod-cache:
-  go-build-cache:
+  backend_tmp:
+  frontend_node_modules:
+  go_cache:
+  db_data: # ✅ added for Postgres persistence
 
 networks:
   evaultz_net:

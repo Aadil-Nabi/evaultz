@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import NavigationPage from "./components/navigation";
 
 export const metadata: Metadata = {
   title: "Evaultz",
@@ -12,8 +13,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html className="h-full bg-white dark:bg-gray-900">
+      <body className="h-full">
+        <NavigationPage />
+        <main>{children}</main>
+      </body>
     </html>
   );
 }

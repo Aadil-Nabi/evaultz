@@ -1,0 +1,39 @@
+include:
+  - ciphertrust.yaml
+  - postgres.yaml
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: evaultz-backend
+    depends_on:
+      - db
+      - ciphertrust
+    env_file:
+      - ./backend/.env
+    ports:
+      - "8082:8082"
+    networks:
+      - evaultz_net
+
+  frontend:
+    build:
+      context: ./frontend/evaultzweb
+      dockerfile: Dockerfile
+    container_name: evaultz-frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000" # frontend accessible on host:3000
+    environment:
+      NEXT_PUBLIC_API_URL: http://backend:8082
+    networks:
+      - evaultz_net
+
+volumes:
+  db_data:
+
+networks:
+  evaultz_net:
+    driver: bridge

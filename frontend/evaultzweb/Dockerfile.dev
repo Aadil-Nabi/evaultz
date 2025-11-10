@@ -6,9 +6,17 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 
-# Copy source (will also be mounted by volumes in compose)
+# Copy source (will be overridden by volume anyway)
 COPY . .
+
+# Force Next.js to use webpack (stable with polling)
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV CHOKIDAR_USEPOLLING=true
+ENV WATCHPACK_POLLING=true
+ENV WATCHPACK_POLLING_INTERVAL=500
+ENV NEXT_WEBPACK_USEPOLLING=true
 
 EXPOSE 3000
 
+# Run Next.js with Turbopack
 CMD ["npm", "run", "dev"]
