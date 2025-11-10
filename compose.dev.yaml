@@ -1,5 +1,6 @@
 # docker-compose.dev.yaml
 include:
+  - postgres.yaml
   - ciphertrust.yaml
 
 services:
