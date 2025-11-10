@@ -22,11 +22,11 @@ services:
     depends_on:
       - frontend
     # optional: simple health check
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
 
   frontend:
     build:
