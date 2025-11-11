@@ -16,6 +16,8 @@ RUN go install github.com/air-verse/air@latest
 COPY go.mod go.sum ./
 RUN go mod download
 
+# Copy Air config first
+COPY .air.toml ./
 # Copy source
 COPY . .
 

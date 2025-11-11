@@ -3,11 +3,8 @@ package main
 import (
 	"github.com/Aadil-Nabi/evaultz/configs"
 	"github.com/Aadil-Nabi/evaultz/controllers/handlers/filehandlers"
-	"github.com/Aadil-Nabi/evaultz/controllers/handlers/paymenthandlers"
-	"github.com/Aadil-Nabi/evaultz/controllers/handlers/posthandlers"
 	"github.com/Aadil-Nabi/evaultz/controllers/handlers/userhandlers"
 
-	"github.com/Aadil-Nabi/evaultz/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,19 +28,14 @@ func main() {
 	router.DELETE("/delete/:id", userhandlers.DeleteUser)
 
 	// Routes for user Detail.
-	router.GET("/getuserdetails", middleware.RequireAuth, userhandlers.GetUserDetails)
 
 	// Routers for file operations
-	router.GET("/", middleware.RequireAuth, filehandlers.ListFiles)
-	router.POST("/upload", middleware.RequireAuth, filehandlers.UploadFile)
-	// router.GET("/download", controllers.DownloadFile)
-	router.DELETE("/delete", middleware.RequireAuth, filehandlers.DeleteFile)
+	// router.GET("/", middleware.RequireAuth, filehandlers.ListFiles)
+	router.POST("/upload", filehandlers.Upload)
 
 	// Routers for Posts
-	router.GET("/posts", middleware.RequireAuth, posthandlers.ListPosts)
 
 	// Routes for Payments
-	router.POST("/addpayment", middleware.RequireAuth, paymenthandlers.PaymentHandler)
 
 	router.Run(":8082")
 }

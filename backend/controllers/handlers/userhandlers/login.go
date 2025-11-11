@@ -14,8 +14,8 @@ import (
 
 type userLoginDetails struct {
 	Email    string
-	Username string
 	Password string
+	Username string
 }
 
 func Login(c *gin.Context) {
@@ -74,7 +74,7 @@ func Login(c *gin.Context) {
 	// Send a response.
 	c.JSON(http.StatusOK, gin.H{
 		"id":      user.ID,
-		"message": user.FirstName + " logged in successfully",
+		"message": user.Username + " logged in successfully",
 	})
 
 }

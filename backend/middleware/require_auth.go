@@ -44,12 +44,11 @@ func RequireAuth(c *gin.Context) {
 		// Find the user with token sub
 		var user models.User
 		configs.DB.First(&user, claims["sub"])
-		if user.ID == 0 {
+		if user.ID == [16]byte{} {
 			c.AbortWithStatus(http.StatusUnauthorized)
-
 		}
 
-		// Attach to request``
+		// Attach to request
 		c.Set("user", user)
 
 		// Continue to next
