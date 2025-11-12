@@ -3,49 +3,51 @@ package filehandlers
 import (
 	"context"
 	"fmt"
+	"io"
 	"net/http"
+	"time"
 
 	"github.com/Aadil-Nabi/evaultz/utility/awsclient"
 	"github.com/gin-gonic/gin"
-
-	"path/filepath"
 )
 
-var s3Client = awsclient.InitS3Client()
+// POST /upload-large
+func UploadHandler(c *gin.Context) {
+	bucketService, err := awsclient.NewBucketBasics()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
-func Upload(c *gin.Context) {
-	// Parse file from form-data
 	file, err := c.FormFile("file")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "No file uploaded"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "file not provided"})
 		return
 	}
 
-	// Open the uploaded file
-	f, err := file.Open()
+	src, err := file.Open()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to open uploaded file"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "unable to open file"})
 		return
 	}
-	defer f.Close()
+	defer src.Close()
 
-	// Define bucket and object key
-	bucket := "evaultz-s3-bucket"
-	objectKey := filepath.Base(file.Filename) // or generate UUID
-
-	// Upload to S3
-
-	err = s3Client.UploadStream(context.TODO(), bucket, objectKey, f)
+	fileBytes, err := io.ReadAll(src)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to upload: %v", err)})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to read file"})
 		return
 	}
 
-	// Return success response
+	key := fmt.Sprintf("uploads/%d_%s", time.Now().Unix(), file.Filename)
+	url, err := bucketService.UploadLargeFile(context.TODO(), key, fileBytes)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "upload failed"})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"message":  "File uploaded successfully",
-		"filename": file.Filename,
-		"bucket":   bucket,
-		"key":      objectKey,
+		"message": "file uploaded successfully",
+		"url":     url,
+		"key":     key,
 	})
 }

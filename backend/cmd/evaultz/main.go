@@ -22,16 +22,16 @@ func main() {
 	router.Use(gin.Logger())
 
 	// Routers for user operations.
-	router.POST("/signup", userhandlers.SignUpHandler)
-	router.POST("/login", userhandlers.Login)
-	router.PATCH("/update/:id", userhandlers.UpdateUser)
-	router.DELETE("/delete/:id", userhandlers.DeleteUser)
+	router.POST("/api/v1/signup", userhandlers.SignUpHandler)
+	router.POST("/api/v1/login", userhandlers.Login)
+	router.PATCH("/api/v1/update/:id", userhandlers.UpdateUser)
+	router.DELETE("/api/v1/delete/:id", userhandlers.DeleteUser)
 
 	// Routes for user Detail.
 
 	// Routers for file operations
 	// router.GET("/", middleware.RequireAuth, filehandlers.ListFiles)
-	router.POST("/upload", filehandlers.Upload)
+	router.POST("/api/v1/upload", filehandlers.UploadHandler)
 
 	// Routers for Posts
 
