@@ -1,4 +1,4 @@
-import NavigationPage from "./components/navigation";
+import NavigationPage from "./ui/navigation";
 
 export default function HomePage() {
   return (

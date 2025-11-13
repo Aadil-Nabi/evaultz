@@ -5,7 +5,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io"
 	"log"
 	"os"
 
@@ -68,21 +67,25 @@ func (svc *BucketBasics) UploadLargeFile(ctx context.Context, key string, fileBy
 
 // ─── Download File ───
 func (svc *BucketBasics) DownloadFile(ctx context.Context, key string) ([]byte, error) {
-	output, err := svc.Client.GetObject(ctx, &s3.GetObjectInput{
+	var partMiBs int64 = 10
+	downloader := manager.NewDownloader(svc.Client, func(d *manager.Downloader) {
+		d.PartSize = partMiBs * 1024 * 1024
+	})
+
+	buffer := manager.NewWriteAtBuffer([]byte{})
+
+	_, err := downloader.Download(ctx, buffer, &s3.GetObjectInput{
 		Bucket: aws.String(svc.BucketName),
 		Key:    aws.String(key),
 	})
-	if err != nil {
-		return nil, err
-	}
-	defer output.Body.Close()
 
-	buf, err := io.ReadAll(output.Body)
 	if err != nil {
-		return nil, err
+		log.Printf("Couldn't download large object from %v:%v. Here's why: %v\n",
+			svc.BucketName, key, err)
 	}
 
-	return buf, nil
+	return buffer.Bytes(), err
+
 }
 
 // ─── List Files in Bucket ───

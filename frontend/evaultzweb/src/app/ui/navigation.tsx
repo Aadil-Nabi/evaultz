@@ -8,7 +8,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import Link from "next/link";
 import UserMenuPage from "./UserMenu";
-import LoginButton from "@/app/components/LoginButton";
+import LoginButton from "@/app/ui/LoginButton";
 
 export default function NavigationPage() {
   let isUserLoggedIn = false;
@@ -43,7 +43,7 @@ export default function NavigationPage() {
                   Dashboard
                 </Link>
                 <Link
-                  href="upload"
+                  href="/file/upload"
                   className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"
                 >
                   Upload File

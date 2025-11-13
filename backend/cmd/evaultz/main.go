@@ -32,6 +32,8 @@ func main() {
 	// Routers for file operations
 	// router.GET("/", middleware.RequireAuth, filehandlers.ListFiles)
 	router.POST("/api/v1/upload", filehandlers.UploadHandler)
+	router.GET("/api/v1/download/:filename", filehandlers.DownloadHander)
+	router.GET("/api/v1/list", filehandlers.ListHandler)
 
 	// Routers for Posts
 

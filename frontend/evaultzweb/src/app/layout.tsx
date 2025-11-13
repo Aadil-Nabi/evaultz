@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import NavigationPage from "./components/navigation";
+import NavigationPage from "./ui/navigation";
 
 export const metadata: Metadata = {
   title: "Evaultz",
