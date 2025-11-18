@@ -37,6 +37,7 @@ import TenantUsageChart from "@/components/charts/TenantUsageChart";
 import SharingTrendChart from "@/components/charts/SharingTrendChart";
 import FileTypeChart from "@/components/charts/FileTypeChart";
 import Link from "next/link";
+import { DropdownMenu } from "@/components/ui/dropdown-menu";
 import DropdownMenuPage from "@/components/DropDownMenu";
 
 const navigation = [
@@ -66,7 +67,20 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Page() {
+// --------------------------------------------Files Layout Start here ------------------------------------///////////
+export default function FilesLayout({
+  children,
+  myfiles,
+  publicfiles,
+  shared,
+  upload,
+}: {
+  children: React.ReactNode;
+  myfiles: React.ReactNode;
+  publicfiles: React.ReactNode;
+  shared: React.ReactNode;
+  upload: React.ReactNode;
+}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -352,43 +366,20 @@ export default function Page() {
             <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
               <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                 <div className="bg-muted/50 aspect-video rounded-xl">
-                  <ChartContainer>
-                    <StorageUsageChart />
-                  </ChartContainer>
-                </div>
-                <div className="bg-muted/50 aspect-video rounded-xl">
-                  <ChartContainer>
-                    <PublicVsPrivateChart />
-                  </ChartContainer>
-                </div>
-                <div className="bg-muted/50 aspect-video rounded-xl">
-                  <ChartContainer>
-                    <UploadsChart />
-                  </ChartContainer>
-                </div>
-                <div className="bg-muted/50 aspect-video rounded-xl">
-                  <ChartContainer>
-                    <TenantUsageChart />
-                  </ChartContainer>
-                </div>
-                <div className="bg-muted/50 aspect-video rounded-xl">
-                  <ChartContainer>
-                    <SharingTrendChart />
-                  </ChartContainer>
-                </div>
-                <div className="bg-muted/50 aspect-video rounded-xl">
-                  <ChartContainer>
-                    <FileTypeChart />
-                  </ChartContainer>
+                  <ChartContainer>{upload}</ChartContainer>
                 </div>
               </div>
               <div className="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min">
-                <SharedFilesPage />
+                {myfiles}
               </div>
 
               <div className="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min">
-                <SharedFilesPage />
+                {shared}
               </div>
+              <div className="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min">
+                {publicfiles}
+              </div>
+              {children}
             </div>
           </main>
         </div>

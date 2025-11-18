@@ -4,6 +4,9 @@ WORKDIR /app
 
 # Install dependencies
 COPY package.json package-lock.json ./
+
+
+# Install dependencies INSIDE container
 RUN npm install
 
 # Copy source (will be overridden by volume anyway)

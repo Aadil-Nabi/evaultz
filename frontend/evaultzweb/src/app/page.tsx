@@ -1,9 +1,17 @@
-import NavigationPage from "./ui/navigation";
+import AboutFounder from "./sections/AboutFounder";
+import CTASection from "./sections/CTASection";
+import FAQSection from "./sections/FAQSection";
+import FeatureSection from "./sections/FeatureSection";
+import HeroSection from "./sections/HeroSection";
 
 export default function HomePage() {
   return (
     <>
-      <div>Home Page</div>
+      <HeroSection />
+      <FeatureSection />
+      <CTASection />
+      <AboutFounder />
+      <FAQSection />
     </>
   );
 }

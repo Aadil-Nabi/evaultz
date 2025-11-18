@@ -15,7 +15,6 @@ export default function RootLayout({
   return (
     <html className="h-full bg-white dark:bg-gray-900">
       <body className="h-full">
-        <NavigationPage />
         <main>{children}</main>
       </body>
     </html>
