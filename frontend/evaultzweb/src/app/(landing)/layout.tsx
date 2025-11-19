@@ -17,7 +17,7 @@ export default function LandingLayout({
     <html className="h-full bg-white dark:bg-gray-900">
       <body className="h-full">
         <LandingNavigationPage />
-        <main>{children}</main>
+        {children}
         <FooterSection />
       </body>
     </html>

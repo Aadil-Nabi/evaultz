@@ -9,39 +9,39 @@ import {
 
 const features = [
   {
-    name: "Push to deploy.",
+    name: "Secure File Storage.",
     description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit aute id magna.",
+      "A hardened encrypted repository built for confidentiality and resilience",
     icon: CloudArrowUpIcon,
   },
   {
-    name: "SSL certificates.",
+    name: "Analytics & Monitoring.",
     description:
-      "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.",
+      "Full audit visibility to track every file, event, and security anomaly.",
     icon: LockClosedIcon,
   },
   {
-    name: "Simple queues.",
+    name: "Data Classification & Integrity Checks.",
     description:
-      "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus.",
+      "Intelligent classification and tamper detection for regulated workloads",
     icon: ArrowPathIcon,
   },
   {
     name: "Advanced security.",
     description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit aute id magna.",
+      "Zero-trust policies, MFA, and compliance-ready security frameworks",
     icon: FingerPrintIcon,
   },
   {
-    name: "Powerful API.",
+    name: "Encryption on the fly",
     description:
-      "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.",
+      "Transparent real-time encryption powered by industry-standard cryptography.",
     icon: Cog6ToothIcon,
   },
   {
-    name: "Database backups.",
+    name: "Mutitenant file share.",
     description:
-      "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus.",
+      "Isolated tenant architecture for safe collaboration across organizations",
     icon: ServerIcon,
   },
 ];
@@ -55,12 +55,11 @@ export default function FeatureSection() {
             Everything you need
           </h2>
           <p className="mt-2 text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl sm:text-balance dark:text-white">
-            No server? No problem.
+            Trustworthy Security. Smarter Data Control.
           </p>
           <p className="mt-6 text-lg/8 text-gray-600 dark:text-gray-300">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores
-            impedit perferendis suscipit eaque, iste dolor cupiditate
-            blanditiis.
+            eVaultz empowers teams to protect their critical files with
+            transparent, reliable, and verifiable security.
           </p>
         </div>
       </div>

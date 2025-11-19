@@ -38,6 +38,7 @@ import SharingTrendChart from "@/components/charts/SharingTrendChart";
 import FileTypeChart from "@/components/charts/FileTypeChart";
 import Link from "next/link";
 import DropdownMenuPage from "@/components/DropDownMenu";
+import EncryptedVsPlainFilesChart from "@/components/charts/EncryptedVsPlainFilesChart";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: HomeIcon, current: true },
@@ -353,7 +354,7 @@ export default function Page() {
               <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                 <div className="bg-muted/50 aspect-video rounded-xl">
                   <ChartContainer>
-                    <StorageUsageChart />
+                    <EncryptedVsPlainFilesChart />
                   </ChartContainer>
                 </div>
                 <div className="bg-muted/50 aspect-video rounded-xl">
