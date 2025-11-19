@@ -128,7 +128,7 @@ export default function LandingNavigationPage() {
 
   return (
     <header
-      className={`bg-white dark:bg-gray-900 fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${
+      className={` dark:bg-gray-900 fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${
         showHeader ? "translate-y-0" : "-translate-y-full"
       }`}
     >
@@ -140,14 +140,13 @@ export default function LandingNavigationPage() {
       >
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5">
-            <span className="sr-only">eVaultz</span>
-            <div className="flex h-16 shrink-0 items-center">
-              <DatabaseZap className="h-8 w-auto dark:hidden" />
-              <h1 className="font-bold h-8 pl-1">eVaultz Inc.</h1>
+            {/* <span className="sr-only">eVaultz</span> */}
+            <div className="flex shrink-0 items-center">
+              <DatabaseZap className=" w-auto dark:hidden" />
+              <h1 className="font-bold  pl-1">eVaultz Inc.</h1>
             </div>
           </Link>
         </div>
-
         {/* Mobile menu button */}
         <div className="flex lg:hidden">
           <button
@@ -159,7 +158,6 @@ export default function LandingNavigationPage() {
             <Bars3Icon aria-hidden="true" className="size-6" />
           </button>
         </div>
-
         {/* Desktop menu */}
         <div className="hidden lg:flex lg:gap-x-12 items-center">
           {/* ---------------- Product dropdown (controlled) ---------------- */}
@@ -279,7 +277,6 @@ export default function LandingNavigationPage() {
             )}
           </div>
         </div>
-
         {/* Right-side login */}
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <Link
