@@ -1,7 +1,7 @@
 # docker-compose.dev.yaml
 include:
   - postgres.yaml
-  - ciphertrust.yaml
+  # - ciphertrust.yaml
 
 services:
   backend:

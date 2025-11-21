@@ -11,9 +11,10 @@ import (
 
 // user struct to store the values received from the request body
 type userDetails struct {
-	Email    string
-	Password string
-	Username string
+	Email       string
+	Password    string
+	Username    string
+	CompanyName string
 }
 
 func SignUpHandler(c *gin.Context) {
@@ -40,9 +41,10 @@ func SignUpHandler(c *gin.Context) {
 	// initialize and assign the values received from the Jason Payload from user, to the User struct
 	user := models.User{
 
-		Email:    userbody.Email,
-		Password: string(hash),
-		Username: userbody.Username,
+		Email:       userbody.Email,
+		Password:    string(hash),
+		Username:    userbody.Username,
+		CompanyName: userbody.CompanyName,
 	}
 
 	// Create the user inside the DB

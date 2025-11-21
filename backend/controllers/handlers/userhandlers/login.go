@@ -13,9 +13,9 @@ import (
 )
 
 type userLoginDetails struct {
-	Email    string
-	Password string
-	Username string
+	Email       string
+	Password    string
+	CompanyName string
 }
 
 func Login(c *gin.Context) {
@@ -32,8 +32,8 @@ func Login(c *gin.Context) {
 	// Lookup the requested user in the DB and store in a variable
 	var user models.User
 
-	configs.DB.Where("email = ? AND username = ?", userLoginDetails.Email, userLoginDetails.Username).Find(&user)
-	if userLoginDetails.Username != user.Username {
+	configs.DB.Where("email = ? AND username = ?", userLoginDetails.Email, userLoginDetails.CompanyName).Find(&user)
+	if userLoginDetails.CompanyName != user.CompanyName {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "invalid username, doesn't match with provided email and password",
 		})

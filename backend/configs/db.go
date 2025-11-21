@@ -22,6 +22,6 @@ func ConnectDB() {
 		log.Fatalf("Failed to open database : %v ", err)
 	}
 
-	fmt.Println("✔ Successfully Connected to the  Neon Postgres database", DB.Name())
+	fmt.Println("✔ Successfully Connected to the database:", DB.Name())
 
 }
