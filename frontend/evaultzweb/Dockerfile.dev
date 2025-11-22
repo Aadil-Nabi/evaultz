@@ -19,7 +19,9 @@ ENV WATCHPACK_POLLING=true
 ENV WATCHPACK_POLLING_INTERVAL=500
 ENV NEXT_WEBPACK_USEPOLLING=true
 
+
 EXPOSE 3000
 
 # Run Next.js with Turbopack
-CMD ["npm", "run", "dev"]
+# CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev:webpack"]

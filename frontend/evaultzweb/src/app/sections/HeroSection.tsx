@@ -2,6 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { WelcomeTextSectionPage } from "./WelcomeTextSection";
+import { AnimatedModalSectionPage } from "./AnimatedModalSection";
 
 export default function HeroSection() {
   return (
@@ -47,16 +49,20 @@ export default function HeroSection() {
               <h1 className="text-5xl font-semibold tracking-tight text-balance text-gray-900 sm:text-7xl dark:text-white">
                 Secure. Store. Protect. eVaultz
               </h1>
-              <p className="mt-8 text-lg font-medium text-pretty text-gray-600 sm:text-xl/8 dark:text-gray-400">
-                A next-gen data vault that keeps your sensitive documents,
+              <div className="mt-8 text-lg font-medium text-pretty text-gray-600 sm:text-xl/8 dark:text-gray-400">
+                {/* A next-gen data vault that keeps your sensitive documents,
                 encrypted files, and business assets fully protected —
-                accessible only by you.
-              </p>
+                accessible only by you. */}
+                <WelcomeTextSectionPage />
+              </div>
+
               <div className="mt-10 flex items-center justify-center gap-x-6">
                 <span>
-                  <Link href="/signup">
-                    <Button variant="default">Get started</Button>
-                  </Link>
+                  {/* <Link href="/signup"> */}
+                  <Button variant="ghost">
+                    <AnimatedModalSectionPage />
+                  </Button>
+                  {/* </Link> */}
                 </span>
                 <Link
                   href="/about"
