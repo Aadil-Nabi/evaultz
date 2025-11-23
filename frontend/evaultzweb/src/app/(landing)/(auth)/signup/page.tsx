@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
+import { signUpUser } from "@/app/api/auth/signUp";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -22,6 +23,8 @@ export default function SignUpPage() {
     email: "",
     password: "",
     confirmPassword: "",
+    username: "",
+    companyname: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +34,7 @@ export default function SignUpPage() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
@@ -39,12 +42,13 @@ export default function SignUpPage() {
       return;
     }
 
-    console.log("Sign Up Submitted:", formData);
-
-    // TODO: Call your backend signup API here
-    // await fetch("/api/signup", { method: "POST", body: JSON.stringify(formData) });
-
-    router.push("/signin");
+    try {
+      const res = await signUpUser(formData);
+      router.push("/signin");
+    } catch (error) {
+      // console.error("signup failed");
+      router.push("/about");
+    }
   };
 
   return (
@@ -63,19 +67,19 @@ export default function SignUpPage() {
         <form onSubmit={handleSubmit}>
           <CardContent>
             <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
+              <div className="grid gap-1">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="user@evaltz.cloud"
                   required
                   value={formData.email}
                   onChange={handleChange}
                 />
               </div>
 
-              <div className="grid gap-2">
+              <div className="grid gap-1">
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
@@ -87,7 +91,7 @@ export default function SignUpPage() {
                 />
               </div>
 
-              <div className="grid gap-2">
+              <div className="grid gap-1">
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
                 <Input
                   id="confirmPassword"
@@ -95,6 +99,30 @@ export default function SignUpPage() {
                   placeholder="••••••••"
                   required
                   value={formData.confirmPassword}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="grid gap-1">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="username"
+                  required
+                  value={formData.username}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="grid gap-1">
+                <Label htmlFor="companyname">Company Name</Label>
+                <Input
+                  id="companyname"
+                  type="text"
+                  placeholder="company name"
+                  required
+                  value={formData.companyname}
                   onChange={handleChange}
                 />
               </div>
@@ -111,9 +139,6 @@ export default function SignUpPage() {
                 Cancel
               </Button>
             </Link>
-            <Button variant="outline" className="w-full">
-              Sign Up with Google (coming soon..)
-            </Button>
           </CardFooter>
         </form>
       </Card>

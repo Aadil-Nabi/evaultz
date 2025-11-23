@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { WelcomeTextSectionPage } from "./WelcomeTextSection";
-import { AnimatedModalSectionPage } from "./AnimatedModalSection";
 
 export default function HeroSection() {
   return (
@@ -58,11 +57,9 @@ export default function HeroSection() {
 
               <div className="mt-10 flex items-center justify-center gap-x-6">
                 <span>
-                  {/* <Link href="/signup"> */}
-                  <Button variant="ghost">
-                    <AnimatedModalSectionPage />
-                  </Button>
-                  {/* </Link> */}
+                  <Link href="/signup">
+                    <Button variant="default">Get started</Button>
+                  </Link>
                 </span>
                 <Link
                   href="/about"

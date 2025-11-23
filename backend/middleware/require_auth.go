@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -10,52 +9,73 @@ import (
 	"github.com/Aadil-Nabi/evaultz/models"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 func RequireAuth(c *gin.Context) {
-	// Get the cookie off the request
-	tokenString, err := c.Cookie("Authorization")
+	// 1. Read secure cookie
+	tokenString, err := c.Cookie("jwt")
 	if err != nil {
-		c.AbortWithStatus(http.StatusUnauthorized)
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Missing authentication"})
+		c.Abort()
+		return
 	}
 
-	// Decode/validate it
+	// 2. Parse JWT
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			return nil, jwt.ErrTokenSignatureInvalid
 		}
-
-		// TOKEN_SECRET is a []byte containing the secret, e.g. []byte("my_secret_key")
 		return []byte(os.Getenv("TOKEN_SECRET")), nil
 	})
-	if err != nil {
-		c.AbortWithStatus(http.StatusUnauthorized)
+
+	if err != nil || !token.Valid {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired token"})
+		c.Abort()
+		return
 	}
 
-	if claims, ok := token.Claims.(jwt.MapClaims); ok {
-		// Check the expiry
-		if float64(time.Now().Unix()) > claims["expiry"].(float64) {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"message": "Try to Login or Register",
-			})
-			c.AbortWithStatus(http.StatusUnauthorized)
+	// 3. Extract claims
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token structure"})
+		c.Abort()
+		return
+	}
+
+	// 4. Check expiry ("exp" not "expiry")
+	if exp, ok := claims["exp"].(float64); ok {
+		if time.Now().Unix() > int64(exp) {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Session expired"})
+			c.Abort()
+			return
 		}
-
-		// Find the user with token sub
-		var user models.User
-		configs.DB.First(&user, claims["sub"])
-		if user.ID == [16]byte{} {
-			c.AbortWithStatus(http.StatusUnauthorized)
-		}
-
-		// Attach to request
-		c.Set("user", user)
-
-		// Continue to next
-		c.Next()
 	} else {
-		c.AbortWithStatus(http.StatusUnauthorized)
-
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid expiration"})
+		c.Abort()
+		return
 	}
 
+	// 5. Fetch user
+	userIDStr := claims["sub"].(string)
+	userID, err := uuid.Parse(userIDStr)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid user ID"})
+		c.Abort()
+		return
+	}
+
+	var user models.User
+	result := configs.DB.First(&user, "id = ?", userID)
+
+	if result.Error != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
+		c.Abort()
+		return
+	}
+
+	// 6. Attach user to context
+	c.Set("user", user)
+
+	c.Next()
 }

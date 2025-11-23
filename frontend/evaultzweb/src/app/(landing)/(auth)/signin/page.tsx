@@ -1,5 +1,6 @@
 "use client";
 
+import { signInUser } from "@/app/api/auth/signIn";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,16 +14,38 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function SignInPage() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("email");
-    const password = formData.get("password");
+  const router = useRouter();
 
-    console.log("Login Submitted:", { email, password });
-    // TODO: Add your API call here (e.g. POST /login)
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    companyname: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const res = await signInUser(formData);
+      if (res.status === 200) {
+        router.refresh();
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      console.error("signin failed", error);
+      router.push("/signin");
+    }
   };
 
   return (
@@ -49,10 +72,11 @@ export default function SignInPage() {
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
-                  name="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="user@evaultz.cloud"
                   required
+                  onChange={handleChange}
+                  value={formData.email}
                 />
               </div>
 
@@ -60,7 +84,7 @@ export default function SignInPage() {
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
                   <a
-                    href="#"
+                    href="/forgotpassword"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
                     Forgot your password?
@@ -68,10 +92,23 @@ export default function SignInPage() {
                 </div>
                 <Input
                   id="password"
-                  name="password"
                   type="password"
                   required
                   placeholder="••••••••"
+                  onChange={handleChange}
+                  value={formData.password}
+                />
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="companyname">Company Name</Label>
+                <Input
+                  id="companyname"
+                  type="text"
+                  placeholder="your company name"
+                  required
+                  onChange={handleChange}
+                  value={formData.companyname}
                 />
               </div>
             </div>
