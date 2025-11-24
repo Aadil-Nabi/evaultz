@@ -6,45 +6,38 @@ const frequencies = [
 ];
 const tiers = [
   {
-    name: "Freelancer",
-    id: "tier-freelancer",
+    name: "Free",
+    id: "tier-free",
     href: "#",
-    price: { monthly: "$19", annually: "$199" },
-    description: "The essentials to provide your best work for clients.",
-    features: [
-      "5 products",
-      "Up to 1,000 subscribers",
-      "Basic analytics",
-      "48-hour support response time",
-    ],
+    price: { monthly: "$0", annually: "$0" },
+    description: "The essentials to store your important files.",
+    features: ["Up to 1,000 files", "Basic analytics"],
     featured: false,
     cta: "Buy plan",
   },
   {
-    name: "Startup",
-    id: "tier-startup",
+    name: "Freelance",
+    id: "tier-freelance",
     href: "#",
-    price: { monthly: "$29", annually: "$299" },
-    description: "A plan that scales with your rapidly growing business.",
+    price: { monthly: "$9", annually: "$199" },
+    description: "A plan that scales with you rapidly growing business.",
     features: [
-      "25 products",
-      "Up to 10,000 subscribers",
+      "Up to 10,000 files",
       "Advanced analytics",
       "24-hour support response time",
-      "Marketing automations",
+      "Access to files shared by other companies",
     ],
     featured: false,
     cta: "Buy plan",
   },
   {
-    name: "Enterprise",
-    id: "tier-enterprise",
+    name: "Team",
+    id: "tier-team",
     href: "#",
     price: "Custom",
     description: "Dedicated support and infrastructure for your company.",
     features: [
-      "Unlimited products",
-      "Unlimited subscribers",
+      "Unlimited files",
       "Advanced analytics",
       "1-hour, dedicated support response time",
       "Marketing automations",
@@ -68,12 +61,11 @@ export default function PricingSection() {
             Pricing
           </h2>
           <p className="mt-2 text-5xl font-semibold tracking-tight text-balance text-gray-900 sm:text-6xl dark:text-white">
-            Pricing that grows with you,.
+            Pricing that grows with you
           </p>
         </div>
         <p className="mx-auto mt-6 max-w-2xl text-center text-lg font-medium text-pretty text-gray-600 sm:text-xl/8 dark:text-gray-400">
-          Choose an affordable plan that’s packed with the best features for
-          engaging your audience, creating customer loyalty, and driving sales.
+          Choose an affordable plan that’s packed with the best usage.
         </p>
         <div className="mt-16 flex justify-center">
           <fieldset aria-label="Payment frequency">

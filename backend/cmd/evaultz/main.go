@@ -8,6 +8,7 @@ import (
 	"github.com/Aadil-Nabi/evaultz/controllers/handlers/filehandlers"
 	"github.com/Aadil-Nabi/evaultz/controllers/handlers/userhandlers"
 	"github.com/Aadil-Nabi/evaultz/middleware"
+	"github.com/Aadil-Nabi/evaultz/migrate"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -17,6 +18,9 @@ import (
 func init() {
 	configs.MustLoadEnvs()
 	configs.ConnectDB()
+
+	// Migrate daatbase/schema if not done, if done GORM automigrate will skip it.
+	migrate.MigrateTables()
 }
 
 func main() {
