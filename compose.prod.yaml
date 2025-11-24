@@ -1,0 +1,41 @@
+include:
+  - postgres.yaml
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: evaultz-backend
+    env_file:
+      - ./backend/.env
+    ports:
+      - "8082:8082"
+    restart: always
+    networks:
+      - evaultz_net
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend/evaultzweb
+      dockerfile: Dockerfile.prod
+    container_name: evaultz-frontend
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: https://evaultz.cloud/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    restart: always
+    networks:
+      - evaultz_net
+
+networks:
+  evaultz_net:
+    driver: bridge
+
+volumes:
+  db_data: # Only DB needs persistence
