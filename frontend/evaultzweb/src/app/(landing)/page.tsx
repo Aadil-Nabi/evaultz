@@ -1,8 +1,9 @@
-import { Testimonials } from "../sections/AnimatedTestimonials";
 import CTASection from "../sections/CTASection";
 import FAQSection from "../sections/FAQSection";
 import FeatureSection from "../sections/FeatureSection";
+import FooterSection from "../sections/FooterSection";
 import HeroSection from "../sections/HeroSection";
+import LandingNavigationPage from "../sections/LandingNavigationPage";
 import PricingSection from "../sections/PricingSection";
 import TrustStats from "../sections/TrustStats";
 
@@ -14,7 +15,6 @@ export default function LandingHomePage() {
       <TrustStats />
       <CTASection />
       <PricingSection />
-      <Testimonials />
       <FAQSection />
     </div>
   );

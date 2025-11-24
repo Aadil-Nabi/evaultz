@@ -14,12 +14,13 @@ export default function LandingLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html className="h-full bg-white dark:bg-gray-900">
-      <body className="h-full">
-        <LandingNavigationPage />
+    <div className="h-full bg-white dark:bg-gray-900">
+      <LandingNavigationPage />
+      <div className="h-full">
         {children}
+
         <FooterSection />
-      </body>
-    </html>
+      </div>
+    </div>
   );
 }
