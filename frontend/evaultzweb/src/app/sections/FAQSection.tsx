@@ -7,34 +7,33 @@ import { MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
 
 const faqs = [
   {
-    question: "What's the best thing about Switzerland?",
+    question: "What is Evaultz?",
     answer:
-      "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+      "Evaultz is a secure file storage, encryption, and digital vault platform designed for individuals and organizations that need enterprise-grade security for their data",
   },
   {
-    question: "How do you make holy water?",
+    question: "Who is Evaultz designed for?",
     answer:
-      "You boil the hell out of it. Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam aut tempora vitae odio inventore fuga aliquam nostrum quod porro. Delectus quia facere id sequi expedita natus.",
+      "Businesses, cybersecurity teams, developers, IT admins, and individuals who handle sensitive documents or want complete control over their data.",
   },
   {
-    question: "What do you call someone with no body and no nose?",
+    question: "What makes Evaultz different from other storage platforms",
     answer:
-      "Nobody knows. Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, voluptas ipsa quia excepturi, quibusdam natus exercitationem sapiente tempore labore voluptatem.",
+      "Evaultz focuses heavily on encryption, privacy, compliance, and user-controlled keys, making it more secure than traditional cloud storage systems.",
   },
   {
-    question: "Why do you never see elephants hiding in trees?",
-    answer:
-      "Because they're so good at it. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+    question: "Can I upload any file type?",
+    answer: "Yes, unless your organization has custom restrictions.",
   },
   {
-    question: "Why can't you hear a pterodactyl go to the bathroom?",
+    question: "Does Evaultz support file sharing?",
     answer:
-      "Because the pee is silent. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, quas voluptatibus ex culpa ipsum, aspernatur blanditiis fugiat ullam magnam suscipit deserunt illum natus facilis atque vero consequatur! Quisquam, debitis error.",
+      "Yes, with secure sharing links that can be time-bound and permission-controlled.",
   },
   {
-    question: "Why did the invisible man turn down the job offer?",
+    question: "How do I delete my Evaultz account?",
     answer:
-      "He couldn't see himself doing it. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eveniet perspiciatis officiis corrupti tenetur. Temporibus ut voluptatibus, perferendis sed unde rerum deserunt eius.",
+      "You can delete it from the profile page, which permanently removes your vault & all encrypted files.",
   },
 ];
 
