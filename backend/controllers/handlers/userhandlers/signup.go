@@ -32,7 +32,7 @@ func SignUpHandler(c *gin.Context) {
 	// Hash the password
 	hash, err := bcrypt.GenerateFromPassword([]byte(userbody.Password), 10)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "failed to Hash password",
 		})
 		return

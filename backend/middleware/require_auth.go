@@ -1,12 +1,11 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"time"
 
-	"github.com/Aadil-Nabi/evaultz/configs"
-	"github.com/Aadil-Nabi/evaultz/models"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
@@ -65,17 +64,19 @@ func RequireAuth(c *gin.Context) {
 		return
 	}
 
-	var user models.User
-	result := configs.DB.First(&user, "id = ?", userID)
+	// var user models.User
+	// result := configs.DB.First(&user, "id = ?", userID)
 
-	if result.Error != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
-		c.Abort()
-		return
-	}
+	// if result.Error != nil {
+	// 	c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
+	// 	c.Abort()
+	// 	return
+	// }
+
+	fmt.Println("USER FROM MIDDLEWARE", userID)
 
 	// 6. Attach user to context
-	c.Set("user", user)
+	c.Set("userID", userID)
 
 	c.Next()
 }
