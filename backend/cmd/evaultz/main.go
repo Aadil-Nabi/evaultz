@@ -44,7 +44,8 @@ func main() {
 	router.POST("/api/v1/signup", userhandlers.SignUpHandler)
 	router.POST("/api/v1/signin", userhandlers.SignIn)
 	router.POST("/api/v1/signout", userhandlers.SignOut)
-	// router.GET("/api/v1/me", userhandlers.Me)
+	router.POST("/api/v1/forgotpassword", middleware.RequireAuth, userhandlers.ForgotPassword)
+	// router.GET("/api/v1/me", middleware.RequireAuth, userhandlers.Me)
 	router.PATCH("/api/v1/update/:id", userhandlers.UpdateUser)
 	router.DELETE("/api/v1/delete/:id", userhandlers.DeleteUser)
 

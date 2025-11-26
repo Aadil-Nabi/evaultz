@@ -13,63 +13,85 @@ import (
 )
 
 type userLoginDetails struct {
-	Email       string `json:"email"`
-	Password    string `json:"password"`
-	CompanyName string `json:"companyname"`
+	Email       string `json:"email" binding:"required,email"`
+	Password    string `json:"password" binding:"required"`
+	CompanyName string `json:"companyname" binding:"required"`
 }
 
 func SignIn(c *gin.Context) {
-	var login userLoginDetails
+	var loginDetails userLoginDetails
 
-	// Parse JSON body
-	if err := c.ShouldBindJSON(&login); err != nil {
+	// Validate request
+	if err := c.ShouldBindJSON(&loginDetails); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 		return
 	}
 
-	// Lookup user
+	// Uniform error response for security
+	invalidCreds := gin.H{"error": "Invalid credentials"}
+
+	// DB lookup
 	var user models.User
+	err := configs.DB.
+		Where("email = ? AND company_name = ?", loginDetails.Email, loginDetails.CompanyName).
+		First(&user).Error
 
-	result := configs.DB.Where("email = ? AND company_name = ?", login.Email, login.CompanyName).First(&user)
-	if result.Error != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email or company"})
+	if err != nil {
+		// Avoid revealing whether email exists
+		c.JSON(http.StatusUnauthorized, invalidCreds)
 		return
 	}
 
-	// Compare password
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(login.Password)); err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid password"})
+	// Verify password
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginDetails.Password)); err != nil {
+		c.JSON(http.StatusUnauthorized, invalidCreds)
 		return
 	}
 
-	// Generate JWT
+	// Validate secret
+	secret := os.Getenv("TOKEN_SECRET")
+	if secret == "" {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server misconfigured"})
+		return
+	}
+
+	// JWT creation
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": user.ID.String(),                      // must be string
-		"exp": time.Now().Add(time.Hour * 24).Unix(), // 24h expiry
-		"iat": time.Now().Unix(),                     // issued at
+		"sub":     user.ID.String(),
+		"email":   user.Email,
+		"company": user.CompanyName,
+		"iat":     time.Now().Unix(),
+		"exp":     time.Now().Add(24 * time.Hour).Unix(),
 	})
 
-	tokenString, err := token.SignedString([]byte(os.Getenv("TOKEN_SECRET")))
+	tokenString, err := token.SignedString([]byte(secret))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to sign token"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
 		return
 	}
 
-	// Set cookie
+	// Cookie security options
+	secure := os.Getenv("ENV") == "prod"
+
 	c.SetSameSite(http.SameSiteLaxMode)
+	if secure {
+		c.SetSameSite(http.SameSiteStrictMode)
+	}
+
 	c.SetCookie(
-		"jwt",       // cookie name
-		tokenString, // value
-		3600*24,     // expires in 24 hours
-		"/",         // path
-		"",          // domain (set in prod)
-		true,        // secure (HTTPS only in prod)
-		true,        // HTTPOnly
+		"jwt",
+		tokenString,
+		3600*24, // 24 hours
+		"/",
+		"",
+		secure, // secure only in prod
+		true,   // HttpOnly
 	)
 
-	// Response (WITHOUT token — cookies only)
+	// Success response
 	c.JSON(http.StatusOK, gin.H{
-		"id":      user.ID,
-		"message": user.Username + " logged in successfully",
+		"id":       user.ID,
+		"username": user.Username,
+		"message":  "Login successful",
 	})
 }
