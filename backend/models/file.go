@@ -17,7 +17,7 @@ type File struct {
 	Size       int64
 	URL        string
 	MimeType   string
-	Visibility string `gorm:"type:text;default:'private'"` // ← FIXED
+	Visibility string `gorm:"type:text;default:'private'"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

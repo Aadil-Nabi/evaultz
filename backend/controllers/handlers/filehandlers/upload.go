@@ -23,6 +23,15 @@ func UploadHandler(c *gin.Context) {
 	userID := c.MustGet("userID").(uuid.UUID)
 	tenantID := c.MustGet("tenantID").(uuid.UUID)
 
+	teamIDPtr, _ := c.Get("teamID")
+	var teamID *uuid.UUID = nil
+
+	if teamIDPtr != nil {
+		if t, ok := teamIDPtr.(*uuid.UUID); ok {
+			teamID = t
+		}
+	}
+
 	// Read file
 	src, err := c.FormFile("file")
 	if err != nil {
@@ -78,6 +87,7 @@ func UploadHandler(c *gin.Context) {
 	file := models.File{
 		OwnerID:    userID,
 		TenantID:   tenantID,
+		TeamID:     teamID,
 		FileName:   src.Filename,
 		StorageKey: key,
 		MimeType:   src.Header.Get("Content-Type"),
