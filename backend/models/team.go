@@ -11,7 +11,8 @@ type Team struct {
 	TenantID  uuid.UUID `gorm:"type:uuid;not null" json:"tenant_id"`
 	Name      string    `gorm:"not null" json:"name"`
 	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 
 	Tenant Tenant `gorm:"foreignKey:TenantID" json:"tenant"`
-	Users  []User `json:"users"`
+	Users  []User `gorm:"foreignKey:TeamID" json:"users"`
 }

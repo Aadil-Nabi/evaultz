@@ -69,7 +69,7 @@ func RequireAuth(c *gin.Context) {
 		return
 	}
 
-	// 6️⃣ Extract Tenant Info
+	// 6️⃣ Extract Tenant ID
 	tenantIDStr, ok := claims["tenant_id"].(string)
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "missing tenant id"})
@@ -84,14 +84,11 @@ func RequireAuth(c *gin.Context) {
 		return
 	}
 
-	tenantName, _ := claims["tenant"].(string) // safe even if missing
-
-	// 7️⃣ Extract Team Info (optional)
+	// 7️⃣ Extract Team ID (OPTIONAL - empty string means no team)
 	var teamID *uuid.UUID = nil
-	var teamName *string = nil
 
-	if v, exists := claims["team_id"]; exists && v != nil {
-		if idStr, ok := v.(string); ok {
+	if v, exists := claims["team_id"]; exists {
+		if idStr, ok := v.(string); ok && idStr != "" && idStr != "null" {
 			id, err := uuid.Parse(idStr)
 			if err == nil {
 				teamID = &id
@@ -99,19 +96,15 @@ func RequireAuth(c *gin.Context) {
 		}
 	}
 
-	if v, exists := claims["team"]; exists && v != nil {
-		if name, ok := v.(string); ok {
-			teamName = &name
-		}
-	}
+	// 8️⃣ Extract Username (optional)
+	username, _ := claims["username"].(string)
 
-	// 8️⃣ Inject into Gin context
+	// 9️⃣ Inject into Gin Context
 	c.Set("userID", userID)
 	c.Set("tenantID", tenantID)
-	c.Set("tenantName", tenantName)
-	c.Set("teamID", teamID)
-	c.Set("teamName", teamName)
+	c.Set("teamID", teamID) // may be nil
+	c.Set("username", username)
 
-	// 9️⃣ Continue request
+	// 🔟 Continue
 	c.Next()
 }

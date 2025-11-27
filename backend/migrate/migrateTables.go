@@ -26,9 +26,7 @@ func MigrateTables() {
 		&models.Team{},
 		&models.User{},
 		&models.File{},
-		&models.FileSharedUser{},
-		&models.FileSharedTeam{},
-		&models.FileSharedTenant{})
+	)
 
 	log.Println("Successfully created tables inside the database")
 }

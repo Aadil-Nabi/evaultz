@@ -21,7 +21,6 @@ func SignIn(c *gin.Context) {
 
 	var login userLoginDetails
 
-	// Validate request
 	if err := c.ShouldBindJSON(&login); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid login payload"})
 		return
@@ -29,20 +28,18 @@ func SignIn(c *gin.Context) {
 
 	invalid := gin.H{"error": "invalid credentials"}
 
-	// 1️⃣ Find tenant first
+	// 1️⃣ Find tenant
 	var tenant models.Tenant
 	if err := configs.DB.Where("name = ?", login.Tenant).First(&tenant).Error; err != nil {
-		// Hide tenant existence
 		c.JSON(http.StatusUnauthorized, invalid)
 		return
 	}
 
-	// 2️⃣ Find user inside the tenant
+	// 2️⃣ Find user inside tenant
 	var user models.User
 	err := configs.DB.
 		Where("email = ? AND tenant_id = ?", login.Email, tenant.ID).
 		Preload("Team").
-		Preload("Tenant").
 		First(&user).Error
 
 	if err != nil {
@@ -50,35 +47,35 @@ func SignIn(c *gin.Context) {
 		return
 	}
 
-	// 3️⃣ Compare password
+	// 3️⃣ Validate password
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(login.Password)); err != nil {
 		c.JSON(http.StatusUnauthorized, invalid)
 		return
 	}
 
-	// 4️⃣ Ensure TOKEN_SECRET is configured
 	secret := os.Getenv("TOKEN_SECRET")
 	if secret == "" {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "server misconfigured"})
 		return
 	}
 
-	// 5️⃣ Build JWT claims with tenant + team scope
+	// 4️⃣ Build JWT claims
 	claims := jwt.MapClaims{
 		"sub":       user.ID.String(),
 		"email":     user.Email,
 		"tenant_id": user.TenantID.String(),
-		"tenant":    user.Tenant.Name,
-		"team_id":   nil,
-		"team":      nil,
+		"tenant":    tenant.Name,
 		"iat":       time.Now().Unix(),
 		"exp":       time.Now().Add(24 * time.Hour).Unix(),
 	}
 
-	// Only add team if exists
-	if user.Team != nil {
+	// 5️⃣ Add team only if exists
+	if user.TeamID != nil && user.Team != nil {
 		claims["team_id"] = user.Team.ID.String()
 		claims["team"] = user.Team.Name
+	} else {
+		claims["team_id"] = nil
+		claims["team"] = nil
 	}
 
 	// 6️⃣ Sign JWT
@@ -89,10 +86,10 @@ func SignIn(c *gin.Context) {
 		return
 	}
 
-	// 7️⃣ Set JWT cookie
+	// 7️⃣ Write JWT Cookie
 	secure := os.Getenv("ENV") == "prod"
-
 	c.SetSameSite(http.SameSiteLaxMode)
+
 	if secure {
 		c.SetSameSite(http.SameSiteStrictMode)
 	}
@@ -100,18 +97,18 @@ func SignIn(c *gin.Context) {
 	c.SetCookie(
 		"jwt",
 		tokenString,
-		3600*24, // 24 hours
+		3600*24,
 		"/",
 		"",
-		secure, // secure only in prod
-		true,   // HttpOnly
+		secure,
+		true,
 	)
 
-	// 8️⃣ Success
+	// 8️⃣ Response
 	c.JSON(http.StatusOK, gin.H{
 		"id":       user.ID,
 		"username": user.Username,
-		"tenant":   user.Tenant.Name,
+		"tenant":   tenant.Name,
 		"team":     claims["team"],
 		"message":  "login successful",
 	})
