@@ -1,64 +1,113 @@
 package userhandlers
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/Aadil-Nabi/evaultz/configs"
 	"github.com/Aadil-Nabi/evaultz/models"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
-// user struct to store the values received from the request body
-type userDetails struct {
-	Email       string
-	Password    string
-	Username    string
-	CompanyName string
-}
-
 func SignUpHandler(c *gin.Context) {
-	var userbody userDetails
+	type userDetails struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+		Username string `json:"username"`
+		Tenant   string `json:"tenant"`
+		Team     string `json:"team"`
+	}
 
-	// Bind decodes the json payload received on the request body into the struct specified as a pointer
-	err := c.Bind(&userbody)
+	var body userDetails
+
+	// Parse input
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+		return
+	}
+
+	// Hash password
+	hashedPass, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "failed to read body",
-		})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to hash password"})
 		return
 	}
 
-	// Hash the password
-	hash, err := bcrypt.GenerateFromPassword([]byte(userbody.Password), 10)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "failed to Hash password",
-		})
-		return
-	}
+	// Run everything inside a transaction (atomic)
+	err = configs.DB.Transaction(func(tx *gorm.DB) error {
 
-	// initialize and assign the values received from the Jason Payload from user, to the User struct
-	user := models.User{
+		// 1️⃣ Find or create tenant
+		var tenant models.Tenant
+		if err := tx.Where("name = ?", body.Tenant).First(&tenant).Error; err != nil {
+			// Create tenant if not exists
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				tenant = models.Tenant{Name: body.Tenant}
+				if err := tx.Create(&tenant).Error; err != nil {
+					return fmt.Errorf("failed to create tenant: %w", err)
+				}
+			} else {
+				return err
+			}
+		}
 
-		Email:       userbody.Email,
-		Password:    string(hash),
-		Username:    userbody.Username,
-		CompanyName: userbody.CompanyName,
-	}
+		// 2️⃣ Find or create team (if provided)
+		var teamID *uuid.UUID = nil
 
-	// Create the user inside the DB
-	usr := configs.DB.Create(&user)
-	if usr.Error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error":   usr.Error.Error(),
-			"message": "failed to create user",
-		})
-		return
-	}
+		if strings.TrimSpace(body.Team) != "" {
+			var team models.Team
 
-	c.JSON(http.StatusOK, gin.H{
-		"result": user,
+			if err := tx.Where("name = ? AND tenant_id = ?", body.Team, tenant.ID).First(&team).Error; err != nil {
+				if errors.Is(err, gorm.ErrRecordNotFound) {
+					team = models.Team{
+						Name:     body.Team,
+						TenantID: tenant.ID,
+					}
+					if err := tx.Create(&team).Error; err != nil {
+						return fmt.Errorf("failed to create team: %w", err)
+					}
+				} else {
+					return err
+				}
+			}
+
+			// Assign team ID pointer
+			tid := team.ID
+			teamID = &tid
+		}
+
+		// 3️⃣ Ensure email is unique within the tenant
+		var existing models.User
+		if err := tx.Where("email = ? AND tenant_id = ?", body.Email, tenant.ID).First(&existing).Error; err == nil {
+			return fmt.Errorf("user with this email already exists in tenant")
+		}
+
+		// 4️⃣ Create user
+		user := models.User{
+			Email:    body.Email,
+			Password: string(hashedPass),
+			Username: body.Username,
+			TenantID: tenant.ID,
+			TeamID:   teamID,
+		}
+
+		if err := tx.Create(&user).Error; err != nil {
+			return fmt.Errorf("failed to create user: %w", err)
+		}
+
+		return nil
 	})
 
+	// Handle transaction error
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Success
+	c.JSON(http.StatusOK, gin.H{"message": "user created successfully"})
 }

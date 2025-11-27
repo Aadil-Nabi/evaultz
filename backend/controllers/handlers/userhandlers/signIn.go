@@ -12,65 +12,84 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type userLoginDetails struct {
-	Email       string `json:"email" binding:"required,email"`
-	Password    string `json:"password" binding:"required"`
-	CompanyName string `json:"companyname" binding:"required"`
-}
-
 func SignIn(c *gin.Context) {
-	var loginDetails userLoginDetails
+	type userLoginDetails struct {
+		Email    string `json:"email" binding:"required,email"`
+		Password string `json:"password" binding:"required"`
+		Tenant   string `json:"tenant" binding:"required"`
+	}
+
+	var login userLoginDetails
 
 	// Validate request
-	if err := c.ShouldBindJSON(&loginDetails); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+	if err := c.ShouldBindJSON(&login); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid login payload"})
 		return
 	}
 
-	// Uniform error response for security
-	invalidCreds := gin.H{"error": "Invalid credentials"}
+	invalid := gin.H{"error": "invalid credentials"}
 
-	// DB lookup
+	// 1️⃣ Find tenant first
+	var tenant models.Tenant
+	if err := configs.DB.Where("name = ?", login.Tenant).First(&tenant).Error; err != nil {
+		// Hide tenant existence
+		c.JSON(http.StatusUnauthorized, invalid)
+		return
+	}
+
+	// 2️⃣ Find user inside the tenant
 	var user models.User
 	err := configs.DB.
-		Where("email = ? AND company_name = ?", loginDetails.Email, loginDetails.CompanyName).
+		Where("email = ? AND tenant_id = ?", login.Email, tenant.ID).
+		Preload("Team").
+		Preload("Tenant").
 		First(&user).Error
 
 	if err != nil {
-		// Avoid revealing whether email exists
-		c.JSON(http.StatusUnauthorized, invalidCreds)
+		c.JSON(http.StatusUnauthorized, invalid)
 		return
 	}
 
-	// Verify password
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginDetails.Password)); err != nil {
-		c.JSON(http.StatusUnauthorized, invalidCreds)
+	// 3️⃣ Compare password
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(login.Password)); err != nil {
+		c.JSON(http.StatusUnauthorized, invalid)
 		return
 	}
 
-	// Validate secret
+	// 4️⃣ Ensure TOKEN_SECRET is configured
 	secret := os.Getenv("TOKEN_SECRET")
 	if secret == "" {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server misconfigured"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "server misconfigured"})
 		return
 	}
 
-	// JWT creation
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub":     user.ID.String(),
-		"email":   user.Email,
-		"company": user.CompanyName,
-		"iat":     time.Now().Unix(),
-		"exp":     time.Now().Add(24 * time.Hour).Unix(),
-	})
+	// 5️⃣ Build JWT claims with tenant + team scope
+	claims := jwt.MapClaims{
+		"sub":       user.ID.String(),
+		"email":     user.Email,
+		"tenant_id": user.TenantID.String(),
+		"tenant":    user.Tenant.Name,
+		"team_id":   nil,
+		"team":      nil,
+		"iat":       time.Now().Unix(),
+		"exp":       time.Now().Add(24 * time.Hour).Unix(),
+	}
 
+	// Only add team if exists
+	if user.Team != nil {
+		claims["team_id"] = user.Team.ID.String()
+		claims["team"] = user.Team.Name
+	}
+
+	// 6️⃣ Sign JWT
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString([]byte(secret))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate token"})
 		return
 	}
 
-	// Cookie security options
+	// 7️⃣ Set JWT cookie
 	secure := os.Getenv("ENV") == "prod"
 
 	c.SetSameSite(http.SameSiteLaxMode)
@@ -88,10 +107,12 @@ func SignIn(c *gin.Context) {
 		true,   // HttpOnly
 	)
 
-	// Success response
+	// 8️⃣ Success
 	c.JSON(http.StatusOK, gin.H{
 		"id":       user.ID,
 		"username": user.Username,
-		"message":  "Login successful",
+		"tenant":   user.Tenant.Name,
+		"team":     claims["team"],
+		"message":  "login successful",
 	})
 }

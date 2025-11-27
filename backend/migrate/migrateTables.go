@@ -20,9 +20,15 @@ func init() {
 func MigrateTables() {
 
 	// Call Automigrate on DB instaance received from the configs package
-	configs.DB.AutoMigrate(models.User{})
-	configs.DB.AutoMigrate(models.File{})
-	configs.DB.AutoMigrate(models.SharedFile{})
+
+	configs.DB.AutoMigrate(
+		&models.Tenant{},
+		&models.Team{},
+		&models.User{},
+		&models.File{},
+		&models.FileSharedUser{},
+		&models.FileSharedTeam{},
+		&models.FileSharedTenant{})
 
 	log.Println("Successfully created tables inside the database")
 }
