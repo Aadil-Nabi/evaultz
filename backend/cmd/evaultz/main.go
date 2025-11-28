@@ -32,7 +32,7 @@ func main() {
 
 	//CORS, we can add it in  the middlewar, but for simplicity I added it here for time being.
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000", "http://frontend:3000"}, // frontend
+		AllowOrigins:     []string{"https://evaultz.cloud", "http://localhost:3000", "http://frontend:3000"}, // frontend
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
