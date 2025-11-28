@@ -47,23 +47,27 @@ import { SignOutUser } from "../api/auth/signOut";
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: HomeIcon, current: true },
   { name: "Manage Files", href: "/files", icon: FolderIcon, current: false },
-  { name: "Projects", href: "#", icon: FolderIcon, current: false },
-  { name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },
-  { name: "Reports", href: "#", icon: ChartPieIcon, current: false },
+  { name: "Projects", href: "/dashboard", icon: FolderIcon, current: false },
 ];
 const favourites = [
-  { id: 1, name: "Design", href: "#", initial: "D", current: false },
-  { id: 2, name: "Integrations", href: "#", initial: "I", current: false },
+  { id: 1, name: "Design", href: "/dashboard", initial: "D", current: false },
+  {
+    id: 2,
+    name: "Integrations",
+    href: "/dashboard",
+    initial: "I",
+    current: false,
+  },
   {
     id: 3,
     name: "Project Management",
-    href: "#",
+    href: "/dashboard",
     initial: "P",
     current: false,
   },
 ];
 const userNavigation = [
-  { name: "Your profile", href: "/profile" },
+  { name: "Your profile", href: "/dashboard" },
   { name: "Sign out", action: "logout" },
 ];
 

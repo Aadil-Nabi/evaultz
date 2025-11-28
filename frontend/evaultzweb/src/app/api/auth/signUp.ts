@@ -9,7 +9,8 @@ interface SignUpPayload {
   email: string;
   password: string;
   username: string;
-  companyname: string;
+  tenant: string;
+  team: string;
 }
 
 export async function signUpUser(data: SignUpPayload): Promise<SignUpResponse> {

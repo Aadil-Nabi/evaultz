@@ -3,7 +3,7 @@ import axiosClient from "../axiosClient";
 interface SignInPayload {
   email: string;
   password: string;
-  companyname: string;
+  tenant: string;
 }
 
 export async function signInUser(data: SignInPayload): Promise<any> {

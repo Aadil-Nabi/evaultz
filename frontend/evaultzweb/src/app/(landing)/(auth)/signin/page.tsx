@@ -23,7 +23,7 @@ export default function SignInPage() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    companyname: "",
+    tenant: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,14 +101,14 @@ export default function SignInPage() {
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="companyname">Company Name</Label>
+                <Label htmlFor="tenant">Company Name</Label>
                 <Input
-                  id="companyname"
+                  id="tenant"
                   type="text"
                   placeholder="your company name"
                   required
                   onChange={handleChange}
-                  value={formData.companyname}
+                  value={formData.tenant}
                 />
               </div>
             </div>

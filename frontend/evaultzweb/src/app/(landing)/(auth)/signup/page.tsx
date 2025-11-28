@@ -24,7 +24,8 @@ export default function SignUpPage() {
     password: "",
     confirmPassword: "",
     username: "",
-    companyname: "",
+    tenant: "",
+    team: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,13 +117,25 @@ export default function SignUpPage() {
               </div>
 
               <div className="grid gap-1">
-                <Label htmlFor="companyname">Company Name</Label>
+                <Label htmlFor="tenant">Company Name</Label>
                 <Input
-                  id="companyname"
+                  id="tenant"
                   type="text"
                   placeholder="company name"
                   required
-                  value={formData.companyname}
+                  value={formData.tenant}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="grid gap-1">
+                <Label htmlFor="team">Team Name</Label>
+                <Input
+                  id="team"
+                  type="text"
+                  placeholder="team name"
+                  required
+                  value={formData.team}
                   onChange={handleChange}
                 />
               </div>

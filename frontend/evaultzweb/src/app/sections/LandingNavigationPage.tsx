@@ -32,32 +32,32 @@ const products = [
   {
     name: "Analytics",
     description: "Get a better understanding of your traffic",
-    href: "/analytics",
+    href: "/",
     icon: ChartPieIcon,
   },
   {
     name: "Security",
     description: "Your customers’ data will be safe and secure",
-    href: "/security",
+    href: "/",
     icon: FingerPrintIcon,
   },
   {
     name: "Integrations",
     description: "Connect with third-party tools",
-    href: "/integrations",
+    href: "/",
     icon: SquaresPlusIcon,
   },
 ];
 
 const callsToAction = [
-  { name: "Watch demo", href: "/watch", icon: PlayCircleIcon },
-  { name: "Contact sales", href: "/contact", icon: PhoneIcon },
+  { name: "Watch demo", href: "/", icon: PlayCircleIcon },
+  { name: "Contact sales", href: "/", icon: PhoneIcon },
 ];
 
 const about = [
   { name: "About us", href: "/about" },
-  { name: "Support Project", href: "/support" },
-  { name: "Help", href: "/help" },
+  { name: "Support Project", href: "/" },
+  { name: "Help", href: "/" },
 ];
 
 export default function LandingNavigationPage() {
@@ -228,19 +228,19 @@ export default function LandingNavigationPage() {
 
           {/* Regular links */}
           <Link
-            href="#"
+            href="/"
             className="text-sm font-semibold text-gray-900 dark:text-white"
           >
             Solution
           </Link>
           <Link
-            href="#"
+            href="/"
             className="text-sm font-semibold text-gray-900 dark:text-white"
           >
             Feature
           </Link>
           <Link
-            href="#"
+            href="/"
             className="text-sm font-semibold text-gray-900 dark:text-white"
           >
             Pricing
@@ -341,20 +341,20 @@ export default function LandingNavigationPage() {
                 </Disclosure>
 
                 <Link
-                  href="#"
+                  href="/"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5"
                 >
                   Solution
                 </Link>
                 <Link
-                  href="#"
+                  href="/"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5"
                 >
                   Feature
                 </Link>
 
                 <Link
-                  href="#"
+                  href="/"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5"
                 >
                   Pricing
