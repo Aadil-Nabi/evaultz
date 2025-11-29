@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import LandingNavigationPage from "./sections/LandingNavigationPage";
 import FooterSection from "./sections/FooterSection";
 
 export const metadata: Metadata = {

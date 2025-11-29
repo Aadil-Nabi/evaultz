@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "../globals.css";
-import LandingNavigationPage from "../sections/LandingNavigationPage";
 import FooterSection from "../sections/FooterSection";
+import HeaderSectionPage from "../sections/HeaderSection";
 
 export const metadata: Metadata = {
   title: "Evaultz",
@@ -15,7 +15,8 @@ export default function LandingLayout({
 }>) {
   return (
     <div className="h-full bg-white dark:bg-gray-900">
-      <LandingNavigationPage />
+      {/* <LandingNavigationPage /> */}
+      <HeaderSectionPage />
       <div className="h-full">
         {children}
 

@@ -18,11 +18,13 @@ type FileUploadPayload struct {
 }
 
 func UploadHandler(c *gin.Context) {
+
+	// Get Database configurations.
 	db := configs.DB
 
+	// Get tenantID, teamID and userID from the gin context.
 	userID := c.MustGet("userID").(uuid.UUID)
 	tenantID := c.MustGet("tenantID").(uuid.UUID)
-
 	teamIDPtr, _ := c.Get("teamID")
 	var teamID *uuid.UUID = nil
 
@@ -32,7 +34,7 @@ func UploadHandler(c *gin.Context) {
 		}
 	}
 
-	// Read file
+	// Get file from the form
 	src, err := c.FormFile("file")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "file is required"})
@@ -42,6 +44,7 @@ func UploadHandler(c *gin.Context) {
 	// Default visibility = private
 	visibility := "private"
 
+	// Get the inputs from the gin context.
 	var payload FileUploadPayload
 	_ = c.ShouldBind(&payload)
 
@@ -68,14 +71,15 @@ func UploadHandler(c *gin.Context) {
 		return
 	}
 
-	// Upload to S3
+	// Upload to the AWS S3
 	s3, err := awsclient.NewBucketBasics()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "s3 client init failed"})
 		return
 	}
 
-	key := fmt.Sprintf("uploads/%s_%s", uuid.NewString(), src.Filename)
+	// Structure the key, so that file upload gets uploaded in the same pattern in s3
+	key := fmt.Sprintf("uploads/%v/%v/%v/%s_%s", tenantID, teamID, userID, uuid.NewString(), src.Filename)
 
 	url, err := s3.UploadLargeFile(context.TODO(), key, bytes)
 	if err != nil {
@@ -83,7 +87,6 @@ func UploadHandler(c *gin.Context) {
 		return
 	}
 
-	// Save DB record
 	file := models.File{
 		OwnerID:    userID,
 		TenantID:   tenantID,
@@ -96,6 +99,7 @@ func UploadHandler(c *gin.Context) {
 		Visibility: visibility,
 	}
 
+	// Save file metadata inside the DB.
 	if err := db.Create(&file).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed saving metadata"})
 		return

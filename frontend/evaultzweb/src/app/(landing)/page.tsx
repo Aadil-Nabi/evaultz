@@ -3,7 +3,6 @@ import FAQSection from "../sections/FAQSection";
 import FeatureSection from "../sections/FeatureSection";
 import FooterSection from "../sections/FooterSection";
 import HeroSection from "../sections/HeroSection";
-import LandingNavigationPage from "../sections/LandingNavigationPage";
 import PricingSection from "../sections/PricingSection";
 import TrustStats from "../sections/TrustStats";
 
